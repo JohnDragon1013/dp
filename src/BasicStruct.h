@@ -54,6 +54,7 @@ public:
 #define GRID_WIDTH_Y 0.2    //网格的y宽度
 
 struct PathPointxy{
+    PathPointxy():length(0),dis(0),obssize(0){};
     std::vector<RoadPoint> pps;
     double length;
     double dis;
@@ -78,6 +79,12 @@ struct Car//车结构体
     double L;//前后轮轴距
     double RtoT;//后轮距离车尾的距离
 
+};
+struct carStatus{
+    carStatus():speed(-1),angle(-1),gear(-1){};
+    float speed;
+    float angle;
+    int gear;
 };
 extern PathPointxy g_LastPath;
 extern RoadPoint g_currentLocation;

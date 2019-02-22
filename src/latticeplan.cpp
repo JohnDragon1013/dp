@@ -12,14 +12,14 @@
 #include <pcl/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <iostream>
-#include<iomanip>
+#include <iomanip>
 #include <sstream>
 #include <visualization_msgs/Marker.h>
 #include <pthread.h>
 #include "msgHeader/Follow.h"
 PathPointxy ExcutablePath;
-PathPointxy wholereferpath;
-vector<PathPointxy> referLane;
+vector<PathPointxy> wholeReferLane;
+PathPointxy referLane;
 Obstacle obs;
 LocationReceiver Location_receiver;
 
@@ -29,16 +29,17 @@ RoadPoint collisionPoint;
 vector<PathPointxy> path4draw;
 common::FrenetFramePath last_path_;
 void send4Draw();
-void beginPlan();
+void send4follow(bool flag_failed);
+bool beginPlan();
 void readconfig(common::DpPolyPathConfig &config);
 ros::Publisher pcl_pubPath ;
 ros::Publisher pcl_pubOtherPath ;
 ros::Publisher pcl_pubReferPath ;
+ros::Publisher pubFollow;
 boost::mutex _mutex_update;
 ros::Time _time_update;
 iau_ros_msgs::GridPtr _LidarMsg;
 bool flag_updateLidar=false;
-//nav_msgs::Odometry _odo_cloud;
 ros::Time _time_register;
 void send4Draw(){
     //发送路径信息
@@ -195,10 +196,7 @@ void LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
 
         _mutex_update.unlock();
     }
-
     //Location_receiver.setLidarTime(cloud_ptr->header.stamp.toSec());
-
-    //send4Draw();
 }
 
 bool XY2SL(const PathPointxy referxy,common::ReferenceLine &referenceLine){
@@ -236,40 +234,43 @@ bool XY2SL(const PathPointxy referxy,common::ReferenceLine &referenceLine){
         return false;
     return true;
 }
+bool map_invalid(vector<PathPointxy> lanes,int curin,int targetin){
+    if(lanes.empty()|| curin<0 || targetin <0 || curin >= lanes.size() || targetin >= lanes.size())
+        return true;
+    else
+        return false;
+}
 int curIndex;
 int targetIndex;
 int velocity;
-void beginPlan(){
+common::DpPolyPathConfig config;
+bool beginPlan(){
+    g_currentLocation = Location_receiver.GetCurrentLocation();// np;
     try {
-        RoadPoint np;
-        bool flag_=Location_receiver.updatelocation(_time_register.toSec(),np);
-        if(!flag_)
-            ROS_WARN("Update Location failed....");
-        g_currentLocation = np;
-    }
-    catch (...){
-        ROS_WARN("Update Location Failed and crashed.");
-        return ;
-    }
-    try {
-        referLane = Location_receiver.GetMap(curIndex,targetIndex,velocity);//Location_receiver.GetLocalPath();
+        wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity);//Location_receiver.GetLocalPath();
     }
     catch(...)
     {
-        ROS_WARN("referLane update failed... size::[%d]",referLane.size());
-        return;
+        ROS_WARN("referLane update failed... size::[%d]",wholeReferLane.size());
+        return false;
     }
+    if(map_invalid(wholeReferLane,curIndex,targetIndex))
+    {
+        ROS_WARN("map invalid!");
+        return false;
+    }
+    referLane = wholeReferLane[targetIndex];
         //要将xy转换为sl
     common::ReferenceLine reference_line_info;
-    if(XY2SL(referLane[targetIndex],reference_line_info)) {
-        common::DpPolyPathConfig config;
-        readconfig( config);
-        DPGraphPlan dpp(config, referLane[targetIndex], reference_line_info, obs ,last_path_);
+    if(XY2SL(referLane,reference_line_info)) {
+        DPGraphPlan dpp(config, referLane, reference_line_info, obs ,last_path_);
         //cout << "start Plan" << endl;
         PathPointxy ep = dpp.Getfinalpath(last_path_);
         path4draw = dpp.GetAllPath();
-        if(ep.pps.empty())
+        //bool flag_plan = ;
+        if(ep.pps.empty()) {
             ROS_WARN("PLAN failed");
+        }
         else
             ROS_INFO("PLAN success");
         ExcutablePath =ep;
@@ -281,11 +282,11 @@ void beginPlan(){
         path4draw = p4;
         ROS_WARN("can't translate reference lane from XY to SL");
     }
-
+    return ExcutablePath.pps.empty()? false:true;
 }
 void reSolveRosMsg(const iau_ros_msgs::GridPtr& rosMsg)
 {
-    //_time_register = rosMsg->header.stamp;
+//_time_register = ros::Time::now();
     //if()
     obs.SetGridObsInfo(rosMsg);
 }
@@ -296,12 +297,11 @@ void Process(){
         {
             //获取ros消息
             boost::mutex::scoped_lock lock(_mutex_update);
-            if (!flag_updateLidar||
-                fabs(_time_register.toSec() - _time_update.toSec()) < 0.01)
-                continue;
-            //Location_receiver.updatelocation();
+            if (!flag_updateLidar  )
+                //||fabs(_time_register.toSec() - _time_update.toSec()) < 0.01)
+                //continue;
             try {
-                reSolveRosMsg(_LidarMsg);
+                //reSolveRosMsg(_LidarMsg);
             }
             catch (...){
                 ROS_WARN("_LidarMsg is null...");
@@ -311,32 +311,27 @@ void Process(){
             flag_updateLidar =false;
         }
         //cout<<"开始规划"<<endl;
-        beginPlan();
+        bool flag_failed = beginPlan();
+        //plan finished ,storage the data.
+        Location_receiver.logfile();
         //cout << "完成规划" << endl;
+        send4follow(flag_failed);
         send4Draw();
     }
 }
-void MsgCallback(ros::NodeHandle n)
-{
-
-    //ros::NodeHandle n2;//一个node貌似可以接收多个消息
-    ROS_INFO("start to receive map and lidar!");
-}
-
-void sendThread(){
-    //send4Draw();
-}
 int main(int argc, char **argv)
 {
-    common::DpPolyPathConfig config;
+    //common::DpPolyPathConfig config;
     readconfig(config);
     Location_receiver.readPath();//读取一次路径信息
     ros::init(argc, argv, "test_ljy");//0711 测试RRT注掉
     ros::NodeHandle n;//一个node貌似可以接收多个消息
+    // 发布
     pcl_pubPath = n.advertise<visualization_msgs::Marker> ("Path_output", 1);
     pcl_pubOtherPath =n.advertise<sensor_msgs::PointCloud2>("OtherPath",1);
     pcl_pubReferPath = n.advertise<sensor_msgs::PointCloud2> ("Reference_Lane",1);
-
+    //发布局部规划路径给pathfollow
+    pubFollow = n.advertise<iau_ros_msgs::Follow>("IAU/Follow", 20);
 //订阅
     //订阅激光雷达的障碍物网格数据
     ros::Subscriber sub_lidar = n.subscribe("/IAU/Grid",1,&LidarCallback);
@@ -346,6 +341,9 @@ int main(int argc, char **argv)
     //订阅地图模块发送的数据
     ros::Subscriber subMap = n.subscribe("IAU/Map", 10,&LocationReceiver::MapCallback,&Location_receiver);
 
+    //订阅车辆状态信息
+    ros::Subscriber sub_vehicleStatus = n.subscribe("IAU/VehicleStatus",1,&LocationReceiver::VehicleStatusCallback,&Location_receiver);
+
     //订阅地图模块在匹配不到地图时的全局地图数据
     //ros::Subscriber subGlobalMap = nh.subscribe("IAU/GlobalMap", 10, GlobalMap_message);
 
@@ -354,9 +352,7 @@ int main(int argc, char **argv)
     //订阅地图模块发布的建议速度信息
     ros::Subscriber subVelocity = n.subscribe("IAU/MapVelocity", 10, &LocationReceiver::VelocityCallback,&Location_receiver);
     //
-    //发布局部规划路径给pathfollow
-    ros::Publisher pubFollow = n.advertise<iau_ros_msgs::Follow>("IAU/Follow", 20);
-    //m_FollowHandle = &pubFollow;
+
 
     _time_update= ros::Time();
     _time_register =ros::Time();
@@ -367,11 +363,41 @@ int main(int argc, char **argv)
     //MsgCallback(n);
     while (ros::ok())
     {
+        //Location_receiver.logfile();
         usleep(1e3);
         ros::spinOnce();
     }
     //sleep(1);
     return 0;
+}
+void send4follow(bool flag_failed){
+    iau_ros_msgs::Follow PFollow;
+    if (flag_failed) {
+//        if (DistoObs < 5) {
+//            PFollow.force = 1;
+        //} else {
+            PFollow.force = 1 << 1;
+            PFollow.speed = 0;
+        //}
+    } else {
+        PFollow.force = 1 << 1;
+        PFollow.speed;/// = g_SendSpeed;///
+    }
+    PFollow.cur_pos.x = g_currentLocation.x;
+    PFollow.cur_pos.y = g_currentLocation.y;
+    PFollow.cur_pos.yaw = g_currentLocation.angle;
+
+    PFollow.cur_pos.x += initialPoint.x;
+    PFollow.cur_pos.y += initialPoint.y;
+    for (auto& pt : ExcutablePath.pps) {
+        iau_ros_msgs::PointXYA pp;
+        pp.x = pt.x;
+        pp.y = pt.y;
+        pp.yaw = pt.angle;
+        PFollow.points.push_back(pp);
+    }
+    PFollow.num = PFollow.points.size();
+    pubFollow.publish(PFollow);
 }
 
 void readconfig(common::DpPolyPathConfig &config){
@@ -404,6 +430,5 @@ void readconfig(common::DpPolyPathConfig &config){
     config.path_l_cost_param_k = doc["path_l_cost_param_k"].GetFloat();
     config.path_out_lane_cost = doc["path_out_lane_cost"].GetInt();
     config.path_end_l_cost = doc["path_end_l_cost"].GetInt();
-
     return ;
 }

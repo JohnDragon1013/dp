@@ -2,11 +2,11 @@
 // Created by jydragon on 18-7-26.
 //
 
-#include <fstream>
+
 
 #include "LocationReceiver.h"
 #include "common.h"
-
+//
 void LocationReceiver::LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr){
     iau_ros_msgs::Location map= *map_ptr;
     RoadPoint tempp;
@@ -16,7 +16,11 @@ void LocationReceiver::LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr
     tempp.angle = map_ptr->orientation[2] *PI/180.0;
     //此处需要将坐标转成高斯坐标 然后更新当前点坐标，待添加
     tempp = BasicStruct::GussiantoDikaer(tempp);
-
+    if(!flag_initial)
+    {
+        m_initialPoint = tempp;
+        flag_initial = true;
+    }
     currentLocation.x = tempp.x - m_initialPoint.x;
     currentLocation.y = tempp.y - m_initialPoint.y;
     currentLocation.angle = tempp.angle;
@@ -33,8 +37,8 @@ PathPointxy LocationReceiver::GetLocalPath() {
     //updatelocation();
     if(m_wholereferpath.pps.empty())
         return PathPointxy();
-    if(maybelocation.empty())
-        return PathPointxy();
+    //if(maybelocation.empty())
+     //   return PathPointxy();
 
     //原来的问题应该在这里。
     if(g_currentLocation.x==0&&g_currentLocation.y==0&&g_currentLocation.angle ==0&&g_currentLocation.k ==0)
@@ -153,17 +157,17 @@ bool LocationReceiver::updatelocation(double time_lidar,RoadPoint &newLocation) 
 }
 
 bool LocationReceiver::storageLocation(iau_ros_msgs::Location map) {
-    {
-        boost::mutex::scoped_lock lock (_mutex_poseVec);
-        maybelocation.push_back(map);
-        //cout<<"存储"<<endl;
-        //int _num_total=maybelocation.size();
-        while(maybelocation.size() > _num_MaxBuffer && !maybelocation.empty()) {
-            maybelocation.pop_front();
-            //cout<<"删除点"<<endl;
-        }
-        lock.unlock();
-    }
+//    {
+//        boost::mutex::scoped_lock lock (_mutex_poseVec);
+//        maybelocation.push_back(map);
+//        //cout<<"存储"<<endl;
+//        //int _num_total=maybelocation.size();
+//        while(maybelocation.size() > _num_MaxBuffer && !maybelocation.empty()) {
+//            maybelocation.pop_front();
+//            //cout<<"删除点"<<endl;
+//        }
+//        lock.unlock();
+//    }
     return true;
 }
 void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函数是为了记录地图写的
@@ -200,4 +204,22 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
 
 void LocationReceiver::VelocityCallback(const iau_ros_msgs::VelocityPtr velocity_ptr) {
     m_velocity = velocity_ptr->velocity;
+}
+
+void LocationReceiver::VehicleStatusCallback(const iau_ros_msgs::VehicleStatusPtr vehicleStatusPtr) {
+    m_carStatus.speed = vehicleStatusPtr->vehicleSpeed;
+    m_carStatus.angle = vehicleStatusPtr->steerAngle;
+    m_carStatus.gear = vehicleStatusPtr->gear;
+}
+
+/*用来存储接受到数据，到文本文件中。暂定的存储为
+ * 时间戳（ros time）
+ * 定位
+ * map //貌似不用记录
+ * 车辆信息
+ * */
+void LocationReceiver::logfile() {
+    log<<ros::Time().now().toSec()<<"\t" <<currentLocation.x<<"\t"<< currentLocation.y<<"\t"<<currentLocation.angle <<"\t"
+    << m_carStatus.speed <<"\t"<<m_carStatus.angle;
+    log<<endl;
 }
