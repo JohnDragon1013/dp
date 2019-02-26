@@ -1,0 +1,8 @@
+prefix=/home/jydragon/catkin_ws/src/latticePlan/cmake-build-release/devel
+
+Name: latticePlan
+Description: Description of latticePlan
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/jydragon/catkin_ws/src/latticePlan/cmake-build-release/devel/lib -llatticePlan -lPCL
+Requires: roscpp rospy std_msgs

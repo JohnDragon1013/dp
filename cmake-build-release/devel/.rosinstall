@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/jydragon/catkin_ws/src/latticePlan/cmake-build-release/devel/setup.sh
