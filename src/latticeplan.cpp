@@ -135,12 +135,12 @@ void send4Draw(){
         //cloud_obs.height = 1000;
         //cloud_obs.points.resize(cloud_obs.width * cloud_obs.height);
 
-        for (int j = 0; j < 1000; ++j) {
-            for (int k = 0; k < 600; ++k) {
+        for (int j = 0; j < 400; ++j) {
+            for (int k = 0; k < 150; ++k) {
                 geometry_msgs::Point temp;
-                if (griddata[j * 600 + k] >= 1) {
-                    temp.x = j * GRID_WIDTH - 100;//平移100米
-                    temp.y = (k * GRID_WIDTH - 60);//平移60米
+                if (griddata[j * 150 + k] >= 1) {
+                    temp.x = j * GRID_WIDTH - 40;//平移100米
+                    temp.y = -(k * GRID_WIDTH - 15);//平移60米
                     temp.z = 0;
                     obsCloud.points.push_back(temp);
 
@@ -289,20 +289,24 @@ void reSolveRosMsg(const iau_ros_msgs::GridPtr& rosMsg)
 {
 //_time_register = ros::Time::now();
     //if()
-    obs.SetGridObsInfo(rosMsg);
+//    obs.SetGridObsInfo(rosMsg);
+    obs.SetVirtualGridObsInfo();
 }
 void Process(){
     while(ros::ok())
     {
+        usleep(1e4);
         boost::this_thread::sleep(boost::posix_time::milliseconds(5));
         {
             //获取ros消息
             boost::mutex::scoped_lock lock(_mutex_update);
-            if (!flag_updateLidar  )
+            //if (!flag_updateLidar  )
                 //||fabs(_time_register.toSec() - _time_update.toSec()) < 0.01)
+                //ROS_WARN("No location messeage");
                 //continue;
+
             try {
-                //reSolveRosMsg(_LidarMsg);
+                reSolveRosMsg(_LidarMsg);
             }
             catch (...){
                 ROS_WARN("_LidarMsg is null...");
@@ -318,7 +322,7 @@ void Process(){
         //cout << "完成规划" << endl;
         //send4follow(flag_failed);
         send4Draw();
-        usleep(1e4);
+
     }
 }
 int main(int argc, char **argv)

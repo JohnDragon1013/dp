@@ -28,7 +28,33 @@
 //    m_GridObs = griddata;
 //}
 void Obstacle::SetVirtualGridObsInfo() {
-
+    GRID_Num = 60000;//cloud_ptr->height*cloud_ptr->width;
+    if(GRID_Num<=0) {
+        cout << "cloud_ptr is null " << endl;
+        return ;
+    }
+    grid_widthX = 0.2;
+    grid_widthY = 0.2;
+    grid_xl = 0;//cloud_ptr->width;//g_planinput.xl;
+    grid_xr = 150;//g_planinput.xr;
+    grid_yu = 400;//cloud_ptr->height;//g_planinput.yu;
+    grid_yd = 0;//g_planinput.yd;
+    GRID_WidthNum = grid_xr-grid_xl  ;
+    GRID_LengthNum = grid_yu- grid_yd;
+    vector<unsigned char> griddata(GRID_Num);
+    //此处需要加上去除地面的部分
+    //cloud——ptr可能是空的，会引起崩溃。
+    //cout<<"开始填充grid"<<endl;
+    for (int i=0;i<GRID_Num;i++)
+    {
+        //griddata[i] = cloud_ptr->grid[i];
+        if(i>50280&&i<50314)
+            griddata[i]=1;
+        else
+            griddata[i]=0;
+    }
+    //cout<<"结束填充grid"<<endl;
+    m_GridObs = griddata;
 }
 
 void Obstacle::SetGridObsInfo(const iau_ros_msgs::GridPtr& cloud_ptr)
@@ -113,19 +139,19 @@ bool Obstacle::DetectGridObs(Car myCar,RoadPoint &collisionpoint)
             point.x=i*sin(myCar.phi)+j*cos(myCar.phi)+LeftRear.x;
             //point.x=-point.x;//坐标转换到激光
             point.y=-i*cos(myCar.phi)+j*sin(myCar.phi)+LeftRear.y;
-            int grid_X=-(point.x/grid_widthX)+GRID_WidthNum/2;
+            int grid_X=(point.x/grid_widthX)+GRID_WidthNum/2;
             //grid_X = -grid_X;
             int grid_Y=point.y/grid_widthY+GRID_LengthNum/2;
 
-            if(grid_X >= grid_xl)
+            if(grid_X <= grid_xl)
             {
                 return 0;
             }
-            if(grid_Y <= 500/*grid_yd*/)
+            if(grid_Y <= grid_yd)/*grid_yd*/
             {
                 return 0;
             }
-            if(grid_X <= grid_xr)
+            if(grid_X >= grid_xr)
             {
                 return 0;
             }
@@ -134,8 +160,8 @@ bool Obstacle::DetectGridObs(Car myCar,RoadPoint &collisionpoint)
                 return 0;
             }
 
-            if(m_GridObs[grid_Y*GRID_WidthNum+grid_X] == 1 && grid_X < grid_xl && grid_Y > grid_yd
-               && grid_X > grid_xr && grid_Y < grid_yu)
+            if(m_GridObs[grid_Y*GRID_WidthNum+grid_X] == 1 )//&& grid_X < grid_xl && grid_Y > grid_yd
+              // && grid_X > grid_xr && grid_Y < grid_yu)
             {
                 collisionpoint.x =point.x;
                 collisionpoint.y =point.y;

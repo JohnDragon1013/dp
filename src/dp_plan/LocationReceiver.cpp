@@ -171,6 +171,8 @@ bool LocationReceiver::storageLocation(iau_ros_msgs::Location map) {
     return true;
 }
 void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函数是为了记录地图写的
+    if(m_initialPoint.x==-11111)// 避免坐标原点未被赋值
+        return ;
     //地图当前所在的车道
     const iau_ros_msgs::Map map = *map_ptr;
     m_curindex = map.curindex;

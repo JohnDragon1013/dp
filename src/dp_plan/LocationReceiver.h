@@ -19,6 +19,7 @@ class LocationReceiver {
 public:
     LocationReceiver():pathIndex(0),m_curindex(-1),m_maptargetindex(-1),m_velocity(-1){
         log.open("logFile.txt");
+        m_initialPoint.x=-11111;
     };
     ~LocationReceiver()= default;
     void LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr);
