@@ -199,7 +199,7 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
     }
     auto lastMapTime = map.timestamp.toSec();
     m_Lane = LaneInfo;
-    cout<<"地图"<<endl;
+    //cout<<"地图"<<endl;
 }
 
 void LocationReceiver::VelocityCallback(const iau_ros_msgs::VelocityPtr velocity_ptr) {

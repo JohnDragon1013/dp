@@ -50,11 +50,13 @@ public:
     DPGraphPlan()= default;
     DPGraphPlan(const common::DpPolyPathConfig &config,
                 const PathPointxy referLanexy,
+                const common::TrajectoryPoint startpoint,
                 const common::ReferenceLine &reference_line_info,
                 const Obstacle ob,
                 common::FrenetFramePath lastSLpath
     ):reference_line_(reference_line_info),
       referXYPath(referLanexy),
+      init_point_(startpoint),
       m_obstacles(ob),
       config_(config),
       m_lastFrenetPath(lastSLpath)

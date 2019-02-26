@@ -54,6 +54,7 @@ namespace common {
         //string lane_id;
     };
     struct TrajectoryPoint {
+        TrajectoryPoint(double v_,double a_):v(v_),a(a_),relative_time(0){}
         // path point
         PathPoint path_point;
 

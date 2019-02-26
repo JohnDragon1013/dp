@@ -378,7 +378,8 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
     return path;
 }
 
-bool DPGraphPlan::ChooseMinCostPath(std::list<std::list<DPRoadGraphNode>> graph_nodes,std::vector<DPRoadGraphNode> *min_cost_path) {
+bool DPGraphPlan::ChooseMinCostPath(std::list<std::list<DPRoadGraphNode>> graph_nodes,std::vector<DPRoadGraphNode> *min_cost_path)
+{
     // graph_nodes.back()（即最后一条航点链表）就是我们所需的最小代价航点链表
     // find best path
     std:: vector< vector<DPRoadGraphNode> > apn;

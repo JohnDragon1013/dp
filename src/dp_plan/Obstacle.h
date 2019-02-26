@@ -15,7 +15,7 @@ public:
     //unsigned int GetNumStaticObs(){return num_staticObs;}
     inline vector<unsigned char> GetGridObs(){return m_GridObs;}
     void SetGridObsInfo(const iau_ros_msgs::GridPtr& cloud_ptr);
-    void SetGridObsInfo();
+    void SetVirtualGridObsInfo();
     //collision with the obstacle
     bool DetectGridObs(Car myCar,RoadPoint &collisionpoint);
 

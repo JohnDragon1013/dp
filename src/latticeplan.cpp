@@ -51,7 +51,7 @@ void send4Draw(){
     crashPoint.ns =points_refer.ns = obsCloud.ns = line_path.ns = "Plan_Data";
     line_path.id = 0;
     line_path.type = visualization_msgs::Marker::LINE_STRIP;
-    line_path.scale.x = 0.3;
+    line_path.scale.x = 0.1;
     line_path.color.r = 1.0;
     line_path.color.b = 1.0;
     line_path.color.a = 1.0;
@@ -260,10 +260,11 @@ bool beginPlan(){
         return false;
     }
     referLane = wholeReferLane[targetIndex];
+    common::TrajectoryPoint startPo(velocity,0.0);
         //要将xy转换为sl
     common::ReferenceLine reference_line_info;
     if(XY2SL(referLane,reference_line_info)) {
-        DPGraphPlan dpp(config, referLane, reference_line_info, obs ,last_path_);
+        DPGraphPlan dpp(config, referLane, startPo, reference_line_info, obs ,last_path_);
         //cout << "start Plan" << endl;
         PathPointxy ep = dpp.Getfinalpath(last_path_);
         path4draw = dpp.GetAllPath();
@@ -313,10 +314,11 @@ void Process(){
         //cout<<"开始规划"<<endl;
         bool flag_failed = beginPlan();
         //plan finished ,storage the data.
-        Location_receiver.logfile();
+        //Location_receiver.logfile();
         //cout << "完成规划" << endl;
-        send4follow(flag_failed);
+        //send4follow(flag_failed);
         send4Draw();
+        usleep(1e4);
     }
 }
 int main(int argc, char **argv)
@@ -336,13 +338,13 @@ int main(int argc, char **argv)
     //订阅激光雷达的障碍物网格数据
     ros::Subscriber sub_lidar = n.subscribe("/IAU/Grid",1,&LidarCallback);
     //订阅定位数据，gps+imu之后由position发出
-    ros::Subscriber sub_Location = n.subscribe("/IAU/Location",1,&LocationReceiver::LocationCallback,&Location_receiver);
+    ros::Subscriber sub_Location = n.subscribe("/IAU/Location",10,&LocationReceiver::LocationCallback,&Location_receiver);
 
     //订阅地图模块发送的数据
     ros::Subscriber subMap = n.subscribe("IAU/Map", 10,&LocationReceiver::MapCallback,&Location_receiver);
 
     //订阅车辆状态信息
-    ros::Subscriber sub_vehicleStatus = n.subscribe("IAU/VehicleStatus",1,&LocationReceiver::VehicleStatusCallback,&Location_receiver);
+    ros::Subscriber sub_vehicleStatus = n.subscribe("IAU/VehicleStatus",10,&LocationReceiver::VehicleStatusCallback,&Location_receiver);
 
     //订阅地图模块在匹配不到地图时的全局地图数据
     //ros::Subscriber subGlobalMap = nh.subscribe("IAU/GlobalMap", 10, GlobalMap_message);

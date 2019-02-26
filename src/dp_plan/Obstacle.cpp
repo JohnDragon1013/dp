@@ -7,39 +7,38 @@
 /**
  * for test //not used
  */
-void Obstacle::SetGridObsInfo() {
-    GRID_Num =600000;// cloud_ptr->grid_cols*cloud_ptr->grid_rows;
-    grid_widthX = 0.2;
-    grid_widthY = 0.2;
-    grid_xl = 600;//cloud_ptr->grid_cols;//g_planinput.xl;
-    grid_xr = 0;//g_planinput.xr;
-    grid_yu = 1000;//cloud_ptr->grid_rows;//g_planinput.yu;
-    grid_yd = 0;//g_planinput.yd;
-    GRID_WidthNum = grid_xl - grid_xr;
-    GRID_LengthNum = grid_yu- grid_yd;
-    vector<unsigned char> griddata(GRID_Num);
-    for (int i=0;i<GRID_Num;i++)
-    {
-        if(i>360200&&i<361314)
-            griddata[i]=1;
-        else
-            griddata[i]=0;
-    }
-    m_GridObs = griddata;
+//void Obstacle::SetGridObsInfo() {
+//    GRID_Num =600000;// cloud_ptr->grid_cols*cloud_ptr->grid_rows;
+//    grid_widthX = 0.2;
+//    grid_widthY = 0.2;
+//    grid_xl = 600;//cloud_ptr->grid_cols;//g_planinput.xl;
+//    grid_xr = 0;//g_planinput.xr;
+//    grid_yu = 1000;//cloud_ptr->grid_rows;//g_planinput.yu;
+//    grid_yd = 0;//g_planinput.yd;
+//    GRID_WidthNum = grid_xl - grid_xr;
+//    GRID_LengthNum = grid_yu- grid_yd;
+//    vector<unsigned char> griddata(GRID_Num);
+//    for (int i=0;i<GRID_Num;i++)
+//    {
+//        if(i>360200&&i<361314)
+//            griddata[i]=1;
+//        else
+//            griddata[i]=0;
+//    }
+//    m_GridObs = griddata;
+//}
+void Obstacle::SetVirtualGridObsInfo() {
+
 }
 
 void Obstacle::SetGridObsInfo(const iau_ros_msgs::GridPtr& cloud_ptr)
 {
     //栅格信息 待添加 障碍物更新顺序还有点问题，感觉应该先更新障碍物之后再开始规划
-    //这里rows是1000，代表车辆前进方向，cols是600，
-    //grid_flag中存储顺序为从右向左存储 顺序如下
-//    for(unsigned i = 0 ; i < _gridGenerator._grid_flagobs.rows(); i++)
-//    {
-//        for(unsigned j = 0 ; j < _gridGenerator._grid_flagobs.cols(); j++)
-    //int grid_xl,grid_xr,grid_yu,grid_yd;
     GRID_Num = cloud_ptr->height*cloud_ptr->width;
-    if(GRID_Num!=600000)
-        cout<<"cloud_ptr is null "<<endl;
+    if(GRID_Num<=0) {
+        cout << "cloud_ptr is null " << endl;
+        return ;
+    }
     grid_widthX = 0.2;
     grid_widthY = 0.2;
     grid_xl = cloud_ptr->width;//g_planinput.xl;
@@ -52,9 +51,6 @@ void Obstacle::SetGridObsInfo(const iau_ros_msgs::GridPtr& cloud_ptr)
     //此处需要加上去除地面的部分
     //cloud——ptr可能是空的，会引起崩溃。
     //cout<<"开始填充grid"<<endl;
-    //int gnum1 = cloud_ptr->cloud_flag.size();
-    //int gnum2 = cloud_ptr->grid_flag.size();
-    int countObs=0;
     for (int i=0;i<cloud_ptr->grid.size();i++)
     {
         griddata[i] = cloud_ptr->grid[i];
@@ -67,8 +63,7 @@ void Obstacle::SetGridObsInfo(const iau_ros_msgs::GridPtr& cloud_ptr)
 //            break;
 //        }
     }
-    //cout<< "cloud_ptr.size():"<<countObs<<" "<<gnum1<<endl;
-    cout<<"结束填充grid"<<endl;
+    //cout<<"结束填充grid"<<endl;
     m_GridObs = griddata;
 }
 
@@ -151,4 +146,5 @@ bool Obstacle::DetectGridObs(Car myCar,RoadPoint &collisionpoint)
     //cout<<"障碍物检测通过"<<endl;
     return 0;//˵��û���ϰ���
 }
+
 
