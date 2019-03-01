@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include "CartesianFrenetConverter.h"
+#include "dp_plan/Clothoid.h"
 //程序输入包括 起点的(x,y) 弧长s
 void CartesianFrenetConverter::cartesian_to_frenet(
         const double rs, //弧长
@@ -168,4 +169,43 @@ double CartesianFrenetConverter::CalculateSecondOrderLateralDerivative(
               << std::endl;
     }
     return res;
+}
+bool CartesianFrenetConverter::XY2SL(const PathPointxy referxy,common::ReferenceLine &referenceLine){
+    if(referxy.pps.empty()) {
+        cout<<("Reference lane is empty!")<<endl;
+        return false;
+    }
+    double sum_s =0.0;
+    common::ReferencePoint lastp;// =referxy.pps[0];
+    lastp.x=referxy.pps[0].x;
+    lastp.y=referxy.pps[0].y;
+    lastp.heading =referxy.pps[0].angle;
+    lastp.s =0.0;
+    lastp.l=0.0;
+    lastp.kappa_=0.0;
+    lastp.dkappa_=0.0;
+    referenceLine.reference_points_.push_back(lastp);
+
+    double k,dk,l;
+    for(int rexy=1;rexy<referxy.pps.size();++rexy)
+    {
+        common::ReferencePoint reSL;
+        double dis =BasicStruct::Distance(referxy.pps[rexy],lastp);
+
+        //Clothoid::buildClothoid(lastp.x,lastp.y,lastp.heading,referxy.pps[rexy].x,referxy.pps[rexy].y,referxy.pps[rexy].angle,k,dk,l);
+        sum_s+=dis;
+        reSL.s =sum_s;
+        reSL.l =0.0;
+        reSL.x =referxy.pps[rexy].x;
+        reSL.y =referxy.pps[rexy].y;
+        reSL.heading = referxy.pps[rexy].angle;
+        reSL.kappa_ =0.0;//(referxy.pps[rexy].angle-lastp.heading)/dis;
+        reSL.dkappa_ =0.0;//(reSL.kappa_-lastp.kappa_)/dis;
+        lastp =reSL;//ferxy.pps[rexy];
+        referenceLine.reference_points_.push_back(reSL);
+    }
+    referenceLine.Length =sum_s;
+    if(referenceLine.reference_points_.empty())
+        return false;
+    return true;
 }

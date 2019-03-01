@@ -92,8 +92,8 @@ void DPGraphPlan::UpdateNode(const std::list<DPRoadGraphNode> &prev_nodes,
         // 根据代价最小的原则，在前一level所有航点中找到与当前点连接代价最小的航点，
         // 存储结果
         cur_node->UpdateCost(&prev_dp_point, curve, cost);
-        if(cur_node->min_cost.cost_items[ComparableCost::HAS_COLLISION])
-            cur_node->min_cost_prev_node = nullptr;
+       // if(cur_node->min_cost.cost_items[ComparableCost::HAS_COLLISION])
+        //    cur_node->min_cost_prev_node = nullptr;
 //        logfile<<cost.smoothness_cost<<" "<<cost.historical_cost<< " " ;
     }
 //    logfile<<"\nsum_smoothness:"<<sum_smoothness<<"   sum_obstacle:"<<sum_obstacle<<endl;
@@ -276,6 +276,7 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
     double lasts=0.0;
 
     bool outrange=0;
+    int lastindex =-1;
     for (auto frenetp:finalFrenetpath)
     {
         int finalindex =0;
@@ -295,6 +296,9 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
             break;
         }
         auto referpoint = reference_line_.reference_points_[finalindex];
+        if(lastindex == finalindex)
+            double a =0;
+        lastindex = finalindex;
         //获得s l转换为笛卡尔
 //速度和加速度随便输的
         std::array<double, 3> s_conditions = {frenetp.s, 5, 0.5};

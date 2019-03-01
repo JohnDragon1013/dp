@@ -62,8 +62,6 @@ public:
       m_lastFrenetPath(lastSLpath)
     {};
     ~DPGraphPlan()= default;
-
-
     PathPointxy Getfinalpath(common::FrenetFramePath &lastFrenetPath);
     //inline std::vector<common::FrenetFramePoint> Getpath(){ return m_fanalFrenetpath;};
     inline vector<PathPointxy> GetAllPath(){return m_AllxyPath;};

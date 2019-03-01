@@ -199,41 +199,6 @@ void LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
     //Location_receiver.setLidarTime(cloud_ptr->header.stamp.toSec());
 }
 
-bool XY2SL(const PathPointxy referxy,common::ReferenceLine &referenceLine){
-    if(referxy.pps.empty()) {
-        ROS_WARN("Reference lane is empty!");
-        return false;
-    }
-    double sum_s =0.0;
-    common::ReferencePoint lastp;// =referxy.pps[0];
-    lastp.x=referxy.pps[0].x;
-    lastp.y=referxy.pps[0].y;
-    lastp.heading =referxy.pps[0].angle;
-    lastp.s =0.0;
-    lastp.l=0.0;
-    lastp.kappa_=0.0;
-    lastp.dkappa_=0.0;
-    referenceLine.reference_points_.push_back(lastp);
-    for(int rexy=1;rexy<referxy.pps.size();++rexy)
-    {
-        common::ReferencePoint reSL;
-        double dis =BasicStruct::Distance(referxy.pps[rexy],lastp);
-        sum_s+=dis;
-        reSL.s =sum_s;
-        reSL.l =0.0;
-        reSL.x =referxy.pps[rexy].x;
-        reSL.y =referxy.pps[rexy].y;
-        reSL.heading = referxy.pps[rexy].angle;
-        reSL.kappa_ =0.0;//(referxy.pps[rexy].angle-lastp.heading)/dis;
-        reSL.dkappa_ =0.0;//(reSL.kappa_-lastp.kappa_)/dis;
-        lastp =reSL;//ferxy.pps[rexy];
-        referenceLine.reference_points_.push_back(reSL);
-    }
-    referenceLine.Length =sum_s;
-    if(referenceLine.reference_points_.empty())
-        return false;
-    return true;
-}
 bool map_invalid(vector<PathPointxy> lanes,int curin,int targetin){
     if(lanes.empty()|| curin<0 || targetin <0 || curin >= lanes.size() || targetin >= lanes.size())
         return true;
@@ -263,7 +228,7 @@ bool beginPlan(){
     common::TrajectoryPoint startPo(velocity,0.0);
         //要将xy转换为sl
     common::ReferenceLine reference_line_info;
-    if(XY2SL(referLane,reference_line_info)) {
+    if(CartesianFrenetConverter::XY2SL(referLane,reference_line_info)) {
         DPGraphPlan dpp(config, referLane, startPo, reference_line_info, obs ,last_path_);
         //cout << "start Plan" << endl;
         PathPointxy ep = dpp.Getfinalpath(last_path_);

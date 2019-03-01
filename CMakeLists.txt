@@ -137,7 +137,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(LatticePlanNode src/latticeplan.cpp src/BasicStruct.cpp src/BasicStruct.h src/dp_plan/DPGraphPlan.cpp src/dp_plan/DPGraphPlan.h src/dp_plan/common.cpp src/dp_plan/common.h
+add_executable(LatticePlanNode src/latticeplan.cpp src/BasicStruct.cpp src/BasicStruct.h src/dp_plan/DPGraphPlan.cpp src/dp_plan/DPGraphPlan.h src/dp_plan/common.cpp src/dp_plan/common.h src/dp_plan/Clothoid.cpp src/dp_plan/Clothoid.h
         src/QuinticPolynomialCurve1d.cpp src/QuinticPolynomialCurve1d.h src/dp_plan/ComparableCost.h src/dp_plan/TrajectoryCost.cpp src/dp_plan/TrajectoryCost.h src/CartesianFrenetConverter.cpp
         src/CartesianFrenetConverter.h src/dp_plan/Obstacle.cpp src/dp_plan/Obstacle.h src/Function_GaussProjection.cpp src/Function_GaussProjection.h src/dp_plan/LocationReceiver.cpp src/dp_plan/LocationReceiver.h src/dp_st_speed/SpeedData.h src/dp_st_speed/st_graph_point.cpp src/dp_st_speed/st_graph_point.h src/dp_st_speed/st_graph.cpp src/dp_st_speed/st_graph.h src/dp_st_speed/st_graph_data.h src/dp_st_speed/st_cost.cpp src/dp_st_speed/st_cost.h src/dp_st_speed/speed_limit.h src/dp_st_speed/SpeedData.cpp src/dp_st_speed/sp_st_optimizer.cpp src/dp_st_speed/sp_st_optimizer.h)
 

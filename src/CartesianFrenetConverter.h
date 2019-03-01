@@ -8,6 +8,7 @@
 
 #include <array>
 #include "BasicStruct.h"
+#include "dp_plan/common.h"
 struct Vec2d{
     double x;
     double y;
@@ -81,6 +82,7 @@ public:
     static double CalculateSecondOrderLateralDerivative(
             const double theta_ref, const double theta, const double kappa_ref,
             const double kappa, const double dkappa_ref, const double l);
+    static bool XY2SL(const PathPointxy referxy,common::ReferenceLine &referenceLine);
 };
 
 

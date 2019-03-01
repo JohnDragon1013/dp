@@ -42,16 +42,20 @@ void Obstacle::SetVirtualGridObsInfo() {
     GRID_WidthNum = grid_xr-grid_xl  ;
     GRID_LengthNum = grid_yu- grid_yd;
     vector<unsigned char> griddata(GRID_Num);
-    //此处需要加上去除地面的部分
-    //cloud——ptr可能是空的，会引起崩溃。
-    //cout<<"开始填充grid"<<endl;
+    int num=200;
     for (int i=0;i<GRID_Num;i++)
     {
         //griddata[i] = cloud_ptr->grid[i];
-        if(i>50280&&i<50314)
+        //if(i>41320&&i<41330)//15m
+        if((i>37550&&i<37580)||(i>52593&&i<52603))//|| ((i=num*150+85)&&num<400) )
             griddata[i]=1;
+//        else if((i=num*150+85)&&num<400)
+//        {
+//            griddata[i]=1;
+//        }
         else
             griddata[i]=0;
+        num++;
     }
     //cout<<"结束填充grid"<<endl;
     m_GridObs = griddata;
