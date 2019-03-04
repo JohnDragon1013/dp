@@ -7,6 +7,7 @@
 #include "LocationReceiver.h"
 #include "common.h"
 //
+#define PASSABLELENGTH 35
 void LocationReceiver::LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr){
     iau_ros_msgs::Location map= *map_ptr;
     RoadPoint tempp;
@@ -24,14 +25,6 @@ void LocationReceiver::LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr
     currentLocation.x = tempp.x - m_initialPoint.x;
     currentLocation.y = tempp.y - m_initialPoint.y;
     currentLocation.angle = tempp.angle;
-//    try {
-//        storageLocation(map);
-//    }
-//    catch (...)
-//    {
-//        cout<<"storage Location failed..."<<endl;
-//    }
-    //cout<<"定位..."<<endl;
 }
 PathPointxy LocationReceiver::GetLocalPath() {
     //updatelocation();
@@ -170,6 +163,34 @@ bool LocationReceiver::storageLocation(iau_ros_msgs::Location map) {
 //    }
     return true;
 }
+void LocationReceiver::LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
+    //cout << "激光stamp:" <<cloud_ptr->header.stamp<< endl;
+    {
+        boost::mutex::scoped_lock lock(_mutex_update);
+        _LidarMsg = cloud_ptr;
+        //flag_updateLidar = true;
+        //_time_update = cloud_ptr->header.stamp;
+        //obs.SetGridObsInfo(cloud_ptr);
+
+        //ROS_INFO("rostopic update cloud \n");
+
+        _mutex_update.unlock();
+    }
+    //Location_receiver.setLidarTime(cloud_ptr->header.stamp.toSec());
+}
+void LocationReceiver::reSolveRosMsg(/*const iau_ros_msgs::GridPtr& rosMsg*/)
+{
+//_time_register = ros::Time::now();
+    //if()
+//    obs.SetGridObsInfo(rosMsg);
+    {
+        boost::mutex::scoped_lock lock(_mutex_update);
+        m_obstacle.SetVirtualGridObsInfo();
+        //m_obstacle.SetGridObsInfo(_LidarMsg);
+        lock.unlock();
+    }
+    ChangeLaneDecide();
+}
 void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函数是为了记录地图写的
     if(m_initialPoint.x==-11111)// 避免坐标原点未被赋值
         return ;
@@ -178,6 +199,7 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
     m_curindex = map.curindex;
     //地图需要到的车道
     m_maptargetindex = map.targetindex;
+    m_TargetLane = m_maptargetindex;
     vector<PathPointxy> LaneInfo;
     for (auto& lane : map.road) {
         PathPointxy lp;
@@ -190,7 +212,7 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
 
                 RoadPoint di = BasicStruct::GussiantoDikaer(rp);
                 RoadPoint re;
-                //todo 这里减掉initialPoint的目的是让坐标的值变得小点
+                /// 这里减掉initialPoint的目的是让坐标的值变得小点
                 re.x = di.x - m_initialPoint.x;
                 re.y = di.y - m_initialPoint.y;
                 re.angle = di.angle;
@@ -206,12 +228,98 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
 
 void LocationReceiver::VelocityCallback(const iau_ros_msgs::VelocityPtr velocity_ptr) {
     m_velocity = velocity_ptr->velocity;
+    //m_velocity/=3.6;//换成m/s
 }
 
 void LocationReceiver::VehicleStatusCallback(const iau_ros_msgs::VehicleStatusPtr vehicleStatusPtr) {
     m_carStatus.speed = vehicleStatusPtr->vehicleSpeed;
+    m_carStatus.speed/=3.6;
     m_carStatus.angle = vehicleStatusPtr->steerAngle;
     m_carStatus.gear = vehicleStatusPtr->gear;
+}
+
+
+void LocationReceiver::CollisionTest()
+{
+    //Plan_Type planType;
+    int collisionindex;
+    double collisionDis;
+
+    vector<double> lanecollsion;
+    for (int i = 0; i < m_Lane.size(); i++)
+    {
+        //判断车辆与地图发送的车道数据是否存在碰撞
+        ObstacleonLane(m_Lane[i], collisionindex,collisionDis);
+        lanecollsion.push_back(collisionDis);
+    }
+    m_lanecollsion = lanecollsion;
+    return ;
+}
+bool LocationReceiver::ObstacleonLane(PathPointxy path, int &collisionindex ,double &collisionDis)
+{
+    collisionindex = 100;
+    collisionDis = 100;
+    if (path.pps.size() == 0)
+    {
+        return 1;
+    }
+    //车的模型
+    Car GridObsDetect;
+    GridObsDetect.length = 4.2;//g_ConfigFile.car_length;
+    GridObsDetect.RtoT = 0.8;//g_ConfigFile.car_RtoT;
+    GridObsDetect.width = 2.0;//g_ConfigFile.car_width_W;
+    for (int i = 0; i<path.pps.size(); i++)
+    {
+        GridObsDetect.Position = path.pps[i];
+        GridObsDetect.Position.angle = GridObsDetect.Position.angle;
+        RoadPoint collisionpoint;
+        //只检测车体前方40m，200×0.2;0.2是激光网格的分辨率，一个格网大小代表20cm×2-cm
+        // m_obstacle.SetDetectInfo(200);
+        if (m_obstacle.DetectGridObs(GridObsDetect, collisionpoint) == 1)//����ģʽ���ϰ����ж�
+        {
+            collisionindex = i;
+            collisionDis = BasicStruct::Distance(g_currentLocation,path.pps[i]);
+            return 1;
+        }
+    }
+    return 0;
+}
+///判断是否需要换道
+void LocationReceiver::ChangeLaneDecide() {
+    CollisionTest();
+
+    //还需要计算前车距离和时间
+    struct timeval t1, t2;
+    //gettimeofday(&t1, NULL);
+
+    auto curSpeed = m_carStatus.speed;
+    gettimeofday(&t2, NULL);
+    auto deltaT = (t2.tv_sec - last_timeStamp.tv_sec) * 1000000 + t2.tv_usec - last_timeStamp.tv_usec;//微秒
+    double dt = deltaT/1000000.0;
+    double ObsSpeed =curSpeed- ((last_ObsDis - m_lanecollsion[m_curindex])/dt);
+
+    double safe_Dis = 1.5*curSpeed + (curSpeed*curSpeed - ObsSpeed*ObsSpeed)/(2*0.7*9.8);//安全距离计算方式，详见论文
+
+    last_timeStamp = t2;
+    if (m_lanecollsion[m_maptargetindex] >= safe_Dis)
+    {
+        //沿当前车道前行 速度按照障碍物速度发送
+    }
+    else // 搜索可通行车道
+    {
+        if(m_lanecollsion.size()>=2) {
+            //get the other lane
+            int otherlane;
+            if(m_TargetLane == 0) otherlane = 1;
+            else otherlane = 0;
+            if (m_lanecollsion[otherlane] >= PASSABLELENGTH)
+            {
+                m_TargetLane = otherlane;
+                //flag_changeLane = 1;
+            }
+        }
+
+    }
 }
 
 /*用来存储接受到数据，到文本文件中。暂定的存储为
@@ -219,9 +327,10 @@ void LocationReceiver::VehicleStatusCallback(const iau_ros_msgs::VehicleStatusPt
  * 定位
  * map //貌似不用记录
  * 车辆信息
+ * 前车距离 （如果有） 前车速度
  * */
 void LocationReceiver::logfile() {
     log<<ros::Time().now().toSec()<<"\t" <<currentLocation.x<<"\t"<< currentLocation.y<<"\t"<<currentLocation.angle <<"\t"
-    << m_carStatus.speed <<"\t"<<m_carStatus.angle;
+       << m_carStatus.speed <<"\t"<<m_carStatus.angle;
     log<<endl;
 }

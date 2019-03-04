@@ -2,31 +2,31 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
-      <config projectName="latticePlan" targetName="doxygen" />
-      <config projectName="latticePlan" targetName="roscpp_generate_messages_lisp" />
-      <config projectName="latticePlan" targetName="roscpp_generate_messages_eus" />
-      <config projectName="latticePlan" targetName="gtest" />
-      <config projectName="latticePlan" targetName="gmock" />
-      <config projectName="latticePlan" targetName="gtest_main" />
       <config projectName="latticePlan" targetName="std_msgs_generate_messages_cpp" />
+      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_cpp" />
+      <config projectName="latticePlan" targetName="roscpp_generate_messages_py" />
+      <config projectName="latticePlan" targetName="download_extra_data" />
+      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_lisp" />
+      <config projectName="latticePlan" targetName="gmock_main" />
+      <config projectName="latticePlan" targetName="std_msgs_generate_messages_lisp" />
+      <config projectName="latticePlan" targetName="LatticePlanNode" />
+      <config projectName="latticePlan" targetName="std_msgs_generate_messages_nodejs" />
       <config projectName="latticePlan" targetName="tests" />
       <config projectName="latticePlan" targetName="roscpp_generate_messages_nodejs" />
-      <config projectName="latticePlan" targetName="std_msgs_generate_messages_py" />
-      <config projectName="latticePlan" targetName="LatticePlanNode" />
-      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_nodejs" />
-      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_eus" />
-      <config projectName="latticePlan" targetName="std_msgs_generate_messages_lisp" />
-      <config projectName="latticePlan" targetName="roscpp_generate_messages_cpp" />
-      <config projectName="latticePlan" targetName="download_extra_data" />
-      <config projectName="latticePlan" targetName="std_msgs_generate_messages_eus" />
-      <config projectName="latticePlan" targetName="gmock_main" />
-      <config projectName="latticePlan" targetName="roscpp_generate_messages_py" />
-      <config projectName="latticePlan" targetName="run_tests" />
       <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_py" />
-      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_cpp" />
-      <config projectName="latticePlan" targetName="std_msgs_generate_messages_nodejs" />
-      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_lisp" />
+      <config projectName="latticePlan" targetName="gtest_main" />
+      <config projectName="latticePlan" targetName="roscpp_generate_messages_cpp" />
+      <config projectName="latticePlan" targetName="doxygen" />
+      <config projectName="latticePlan" targetName="gtest" />
+      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_nodejs" />
+      <config projectName="latticePlan" targetName="gmock" />
+      <config projectName="latticePlan" targetName="run_tests" />
+      <config projectName="latticePlan" targetName="std_msgs_generate_messages_eus" />
+      <config projectName="latticePlan" targetName="rosgraph_msgs_generate_messages_eus" />
+      <config projectName="latticePlan" targetName="roscpp_generate_messages_eus" />
+      <config projectName="latticePlan" targetName="std_msgs_generate_messages_py" />
       <config projectName="latticePlan" targetName="clean_test_results" />
+      <config projectName="latticePlan" targetName="roscpp_generate_messages_lisp" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -36,16 +36,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df860cf5-e4bd-4070-9cd7-bf89ceaa59c8" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/dp_plan/Clothoid.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dp_plan/Clothoid.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rviz/plan.rviz" beforeDir="false" afterPath="$PROJECT_DIR$/rviz/plan.rviz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CartesianFrenetConverter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/CartesianFrenetConverter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CartesianFrenetConverter.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/CartesianFrenetConverter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/Obstacle.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/latticeplan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/latticeplan.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -66,51 +60,53 @@
           <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.17" value="2" />
+          <entry key="project.open.time.18" value="1" />
+          <entry key="project.open.time.19" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.35" value="1" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="10" />
+          <entry key="project.opened" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="LatticePlanNode (disassembly)" value="7" />
-          <entry key="cpp" value="18" />
+          <entry key="cpp" value="23" />
           <entry key="gitignore" value="1" />
-          <entry key="h" value="20" />
+          <entry key="h" value="28" />
           <entry key="hpp" value="9" />
           <entry key="iostream" value="1" />
-          <entry key="json" value="1" />
-          <entry key="md" value="1" />
+          <entry key="json" value="2" />
+          <entry key="md" value="2" />
           <entry key="tcc" value="1" />
-          <entry key="txt" value="8" />
+          <entry key="txt" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CMakeLists.txt" value="1" />
+          <entry key="CMakeLists.txt" value="2" />
           <entry key="Disassembly" value="7" />
-          <entry key="JSON" value="1" />
-          <entry key="Markdown" value="1" />
-          <entry key="ObjectiveC" value="49" />
+          <entry key="JSON" value="2" />
+          <entry key="Markdown" value="2" />
+          <entry key="ObjectiveC" value="62" />
           <entry key="PLAIN_TEXT" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="1877" />
+          <entry key="cpp" value="2646" />
           <entry key="gitignore" value="1" />
-          <entry key="h" value="495" />
-          <entry key="md" value="7" />
-          <entry key="txt" value="20" />
+          <entry key="h" value="818" />
+          <entry key="md" value="324" />
+          <entry key="txt" value="38" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CMakeLists.txt" value="19" />
+          <entry key="CMakeLists.txt" value="37" />
           <entry key="Doxygen file" value="2" />
-          <entry key="Markdown" value="7" />
-          <entry key="ObjectiveC" value="2370" />
+          <entry key="Markdown" value="324" />
+          <entry key="ObjectiveC" value="3462" />
           <entry key="PLAIN_TEXT" value="2" />
         </counts>
       </usages-collector>
@@ -121,48 +117,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="292" column="40" selection-start-line="292" selection-start-column="25" selection-end-line="292" selection-end-column="40" />
+            <state relative-caret-position="6840">
+              <caret line="380" column="33" selection-start-line="380" selection-start-column="33" selection-end-line="380" selection-end-column="33" />
               <folding>
                 <element signature="e#42#62#0" expanded="true" />
-                <element signature="e#14361#16369#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/CartesianFrenetConverter.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-882">
-              <caret line="73" column="29" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="29" />
-              <folding>
-                <element signature="e#42#58#0" expanded="true" />
-                <element signature="e#117#2141#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dp_plan/Clothoid.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-54">
-              <caret line="141" column="22" lean-forward="true" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
-              <folding>
-                <element signature="e#2627#2643#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/CartesianFrenetConverter.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
-              <folding>
-                <element signature="e#138#154#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -171,51 +129,47 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/latticeplan.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="230" column="38" selection-start-line="230" selection-start-column="33" selection-end-line="230" selection-end-column="38" />
+            <state relative-caret-position="3888">
+              <caret line="216" column="79" selection-start-line="216" selection-start-column="71" selection-end-line="216" selection-end-column="79" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
-                <element signature="e#1212#6296#0" />
+                <element signature="e#1212#6782#0" />
+                <element signature="e#12053#12889#0" />
+                <element signature="e#12891#14598#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dp_plan/DPGraphPlan.h">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="81" column="31" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="31" />
+            <state relative-caret-position="356">
+              <caret line="300" column="104" selection-start-line="300" selection-start-column="104" selection-end-line="300" selection-end-column="104" />
               <folding>
-                <element signature="e#111#128#0" expanded="true" />
+                <element signature="e#44#73#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dp_plan/TrajectoryCost.cpp">
+        <entry file="file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="159" column="30" selection-start-line="159" selection-start-column="30" selection-end-line="159" selection-end-column="30" />
+            <state relative-caret-position="1314">
+              <caret line="73" column="57" selection-start-line="73" selection-start-column="57" selection-end-line="73" selection-end-column="57" />
+              <folding>
+                <element signature="e#96#130#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dp_plan/ComparableCost.h">
+        <entry file="file://$PROJECT_DIR$/src/BasicStruct.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="163">
-              <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/dp_plan/common.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="716">
-              <caret line="152" column="49" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="49" />
+            <state relative-caret-position="1530">
+              <caret line="85" column="16" selection-start-line="85" selection-start-column="16" selection-end-line="85" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -224,9 +178,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>unit_t_</find>
-      <find>accel_cost_</find>
-      <find>obstacle_cost_</find>
       <find>CheckOverlapOnDpStGraph</find>
       <find>x</find>
       <find>cout</find>
@@ -238,7 +189,6 @@
       <find>test</find>
       <find>GenerateMinCostPath</find>
       <find>sub_map</find>
-      <find>_mutex_update</find>
       <find>readconfig</find>
       <find>init_sl_point_</find>
       <find>init_point</find>
@@ -254,6 +204,10 @@
       <find>reSolveRosMsg</find>
       <find>reference_line_</find>
       <find>flag_updateLidar</find>
+      <find>crashPoint</find>
+      <find>line_path</find>
+      <find>_mutex_update</find>
+      <find>obs</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -297,18 +251,20 @@
         <option value="$PROJECT_DIR$/src/logFile.txt" />
         <option value="$PROJECT_DIR$/src/BasicStruct.cpp" />
         <option value="$PROJECT_DIR$/src/dp_plan/common.h" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/dp_plan/Obstacle.h" />
-        <option value="$PROJECT_DIR$/src/dp_plan/LocationReceiver.h" />
-        <option value="$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp" />
         <option value="$PROJECT_DIR$/src/dp_plan/Obstacle.cpp" />
         <option value="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.h" />
         <option value="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/dp_plan/Clothoid.cpp" />
         <option value="$PROJECT_DIR$/src/CartesianFrenetConverter.h" />
-        <option value="$PROJECT_DIR$/src/latticeplan.cpp" />
         <option value="$PROJECT_DIR$/src/CartesianFrenetConverter.cpp" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/dp_plan/DataProcess.cpp" />
+        <option value="$PROJECT_DIR$/src/dp_plan/DataProcess.h" />
+        <option value="$PROJECT_DIR$/src/latticeplan.cpp" />
+        <option value="$PROJECT_DIR$/src/dp_plan/LocationReceiver.h" />
+        <option value="$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp" />
       </list>
     </option>
   </component>
@@ -320,8 +276,8 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="337" />
-    <option name="y" value="97" />
+    <option name="x" value="112" />
+    <option name="y" value="182" />
     <option name="width" value="1851" />
     <option name="height" value="1040" />
   </component>
@@ -622,12 +578,14 @@
       <workItem from="1551228223325" duration="2684000" />
       <workItem from="1551314396619" duration="3112000" />
       <workItem from="1551401915508" duration="713000" />
-      <workItem from="1551410589540" duration="12836000" />
+      <workItem from="1551410589540" duration="14122000" />
+      <workItem from="1551661303615" duration="7630000" />
+      <workItem from="1551671074384" duration="146000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="435758000" />
+    <option name="totallyTimeSpent" value="444820000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -639,10 +597,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.31660232" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.32322118" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -652,7 +610,7 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32977587" />
-      <window_info anchor="bottom" id="CMake" order="7" weight="0.3091335" />
+      <window_info anchor="bottom" id="CMake" order="7" weight="0.30843115" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3094984" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.2913554" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32870865" />
@@ -663,25 +621,6 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24972737" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="CMake" order="10" weight="0.3290461" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -729,13 +668,8 @@
           <option name="timeStamp" value="229" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/latticeplan.cpp</url>
-          <line>191</line>
-          <option name="timeStamp" value="264" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp</url>
-          <line>164</line>
+          <line>157</line>
           <option name="timeStamp" value="265" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -745,7 +679,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp</url>
-          <line>43</line>
+          <line>36</line>
           <option name="timeStamp" value="271" />
         </line-breakpoint>
       </breakpoints>
@@ -774,29 +708,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../rapidjson-master/include/rapidjson/document.h" />
-    <entry file="file:///usr/local/include/rapidjson/filereadstream.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="33" column="6" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/include/rapidjson/reader.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="567" selection-start-line="567" selection-end-line="567" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/include/rapidjson/document.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="1730" selection-start-line="1730" selection-end-line="1730" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dp/.gitignore" />
     <entry file="file://$PROJECT_DIR$/dp/README.md" />
     <entry file="file://$PROJECT_DIR$/src/dp_st_speed/st_graph.cpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -826,20 +737,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="52" column="23" lean-forward="true" selection-start-line="52" selection-start-column="23" selection-end-line="52" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_st_speed/st_cost.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="61" column="87" lean-forward="true" selection-start-line="61" selection-start-column="62" selection-end-line="61" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_st_speed/st_cost.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="169" column="75" selection-start-line="169" selection-start-column="75" selection-end-line="169" selection-end-column="75" />
         </state>
       </provider>
     </entry>
@@ -941,28 +838,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="11" column="23" lean-forward="true" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="396">
-            <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/include/boost/date_time/date_iterator.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="738">
@@ -974,32 +849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="398">
           <caret line="166" column="4" selection-start-line="166" selection-start-column="4" selection-end-line="166" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/Obstacle.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
-          <caret line="36" selection-start-line="36" selection-end-line="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="181" column="33" lean-forward="true" selection-start-line="181" selection-start-column="33" selection-end-line="181" selection-end-column="33" />
-          <folding>
-            <element signature="e#44#73#0" expanded="true" />
-            <element signature="e#872#2731#0" />
-            <element signature="e#2732#3672#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1038,44 +887,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/BasicStruct.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-202">
-          <caret line="55" column="18" selection-start-line="55" selection-start-column="7" selection-end-line="55" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/TrajectoryCost.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="159" column="30" selection-start-line="159" selection-start-column="30" selection-end-line="159" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/ComparableCost.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/DPGraphPlan.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="81" column="31" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="31" />
-          <folding>
-            <element signature="e#111#128#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/common.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="716">
-          <caret line="152" column="49" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/dp_plan/Clothoid.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -1083,62 +894,174 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/Clothoid.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="139" column="234" selection-start-line="139" selection-start-column="234" selection-end-line="139" selection-end-column="234" />
+        <state relative-caret-position="-54">
+          <caret line="141" column="22" lean-forward="true" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CartesianFrenetConverter.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2556">
+          <caret line="142" column="33" selection-start-line="142" selection-start-column="33" selection-end-line="142" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CartesianFrenetConverter.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
-          <caret line="18" column="7" lean-forward="true" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+          <caret line="18" column="7" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/ros/kinetic/include/geometry_msgs/Point.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1026">
+          <caret line="57" column="55" selection-start-line="57" selection-start-column="55" selection-end-line="57" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/ros/kinetic/include/std_msgs/ColorRGBA.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3510">
+          <caret line="195" column="38" selection-start-line="195" selection-start-column="28" selection-end-line="195" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///opt/ros/kinetic/include/visualization_msgs/Marker.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2394">
+          <caret line="133" column="4" selection-start-line="133" selection-start-column="4" selection-end-line="133" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/DPGraphPlan.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1458">
+          <caret line="81" column="31" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="504">
+            <caret line="28" column="2" selection-start-line="28" selection-start-column="2" selection-end-line="28" selection-end-column="2" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="26" lean-forward="true" selection-start-line="17" selection-start-column="26" selection-end-line="17" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="139" column="288" selection-start-line="139" selection-start-column="288" selection-end-line="139" selection-end-column="288" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/Obstacle.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" selection-start-line="8" selection-end-line="8" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_st_speed/st_cost.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="155" column="39" selection-start-line="155" selection-start-column="39" selection-end-line="155" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_st_speed/st_cost.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="52" column="6" selection-start-line="52" selection-start-column="6" selection-end-line="52" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/TrajectoryCost.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="238" column="3" selection-start-line="238" selection-start-column="3" selection-end-line="238" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/DataProcess.h" />
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/ComparableCost.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/DataProcess.cpp" />
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/common.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="824">
+          <caret line="152" column="49" selection-start-line="152" selection-start-column="32" selection-end-line="152" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6840">
+          <caret line="380" column="33" selection-start-line="380" selection-start-column="33" selection-end-line="380" selection-end-column="33" />
           <folding>
-            <element signature="e#138#154#0" expanded="true" />
+            <element signature="e#42#62#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/latticeplan.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="230" column="38" selection-start-line="230" selection-start-column="33" selection-end-line="230" selection-end-column="38" />
+        <state relative-caret-position="3888">
+          <caret line="216" column="79" selection-start-line="216" selection-start-column="71" selection-end-line="216" selection-end-column="79" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
-            <element signature="e#1212#6296#0" />
+            <element signature="e#1212#6782#0" />
+            <element signature="e#12053#12889#0" />
+            <element signature="e#12891#14598#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/Clothoid.h">
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-54">
-          <caret line="141" column="22" lean-forward="true" selection-start-line="141" selection-start-column="22" selection-end-line="141" selection-end-column="22" />
+        <state relative-caret-position="1314">
+          <caret line="73" column="57" selection-start-line="73" selection-start-column="57" selection-end-line="73" selection-end-column="57" />
           <folding>
-            <element signature="e#2627#2643#0" expanded="true" />
+            <element signature="e#96#130#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp">
+    <entry file="file://$PROJECT_DIR$/src/BasicStruct.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="292" column="40" selection-start-line="292" selection-start-column="25" selection-end-line="292" selection-end-column="40" />
-          <folding>
-            <element signature="e#42#62#0" expanded="true" />
-            <element signature="e#14361#16369#0" />
-          </folding>
+        <state relative-caret-position="1530">
+          <caret line="85" column="16" selection-start-line="85" selection-start-column="16" selection-end-line="85" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/CartesianFrenetConverter.cpp">
+    <entry file="file://$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-882">
-          <caret line="73" column="29" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="29" />
+        <state relative-caret-position="356">
+          <caret line="300" column="104" selection-start-line="300" selection-start-column="104" selection-end-line="300" selection-end-column="104" />
           <folding>
-            <element signature="e#42#58#0" expanded="true" />
-            <element signature="e#117#2141#0" />
+            <element signature="e#44#73#0" expanded="true" />
           </folding>
         </state>
       </provider>

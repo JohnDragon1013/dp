@@ -36,17 +36,17 @@ ros::Publisher pcl_pubPath ;
 ros::Publisher pcl_pubOtherPath ;
 ros::Publisher pcl_pubReferPath ;
 ros::Publisher pubFollow;
-boost::mutex _mutex_update;
+
 ros::Time _time_update;
-iau_ros_msgs::GridPtr _LidarMsg;
+
 bool flag_updateLidar=false;
 ros::Time _time_register;
 void send4Draw(){
     //发送路径信息
     //路径信息
-    visualization_msgs::Marker line_path, obsCloud, points_refer;
+    visualization_msgs::Marker line_path, obsCloud, points_refer,lane_path;
     visualization_msgs::Marker crashPoint;
-    crashPoint.header.frame_id = points_refer.header.frame_id = obsCloud.header.frame_id = line_path.header.frame_id = "velodyne";
+    lane_path.header.frame_id =crashPoint.header.frame_id = points_refer.header.frame_id = obsCloud.header.frame_id = line_path.header.frame_id = "velodyne";
     crashPoint.header.stamp = points_refer.header.stamp = obsCloud.header.stamp = line_path.header.stamp = ros::Time::now();
     crashPoint.ns =points_refer.ns = obsCloud.ns = line_path.ns = "Plan_Data";
     line_path.id = 0;
@@ -86,6 +86,15 @@ void send4Draw(){
     crashPoint.color.a = 1.0;
     //pcl::PointCloud<pcl::PointXYZRGB> cloud_colli;
     //sensor_msgs::PointCloud2 co_output;
+    //车道线
+    lane_path.id=4;
+    lane_path.type = visualization_msgs::Marker::POINTS;
+    lane_path.scale.x = 0.5;
+    lane_path.scale.y = 0.5;
+    lane_path.color.r = 50;
+    lane_path.color.g = 50;
+    lane_path.color.b = 50.0;
+    lane_path.color.a = 1.0;
     //其他路径
     pcl::PointCloud<pcl::PointXYZ> other_Path;
     sensor_msgs::PointCloud2 otherPath_output;
@@ -114,7 +123,7 @@ void send4Draw(){
         p.z = 0;
         line_path.points.push_back(p);
     }
-    //将参考路径转换为局部坐标
+    //将参考路径转换为局部坐标 TODO:添加车道线
     for (size_t i = 0; i < referLane.pps.size(); ++i) {
         double xout, yout;
         RoadPoint org = g_currentLocation;
@@ -127,6 +136,11 @@ void send4Draw(){
         temp.z = 0;
         temp.b =200.0;
         reference_Path.points.push_back(temp);
+        geometry_msgs::Point p;
+        p.x = temp.x;
+        p.y = temp.y-1.5;
+        p.z = temp.z;
+        lane_path.points.push_back(p);
     }
 
     vector<unsigned char> griddata = obs.GetGridObs();
@@ -177,27 +191,15 @@ void send4Draw(){
     pcl_pubPath.publish(crashPoint);
 //    pcl_pubReferPath.publish(points_refer);
     pcl_pubPath.publish(line_path);
+    pcl_pubPath.publish(lane_path);
+
     pcl_pubOtherPath.publish(otherPath_output);
     pcl_pubReferPath.publish(reference_output);
     cout << "发送完成。。。" << endl;
 
 }
 //ofstream iput("/home/jydragon/catkin_ws/src/test/src/path.txt");
-void LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
-    //cout << "激光stamp:" <<cloud_ptr->header.stamp<< endl;
-    {
-        boost::mutex::scoped_lock lock(_mutex_update);
-        _LidarMsg = cloud_ptr;
-        flag_updateLidar = true;
-        //_time_update = cloud_ptr->header.stamp;
-        //obs.SetGridObsInfo(cloud_ptr);
 
-        //ROS_INFO("rostopic update cloud \n");
-
-        _mutex_update.unlock();
-    }
-    //Location_receiver.setLidarTime(cloud_ptr->header.stamp.toSec());
-}
 
 bool map_invalid(vector<PathPointxy> lanes,int curin,int targetin){
     if(lanes.empty()|| curin<0 || targetin <0 || curin >= lanes.size() || targetin >= lanes.size())
@@ -207,12 +209,12 @@ bool map_invalid(vector<PathPointxy> lanes,int curin,int targetin){
 }
 int curIndex;
 int targetIndex;
-int velocity;
+double velocity;
 common::DpPolyPathConfig config;
 bool beginPlan(){
     g_currentLocation = Location_receiver.GetCurrentLocation();// np;
     try {
-        wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity);//Location_receiver.GetLocalPath();
+        wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity,obs);//Location_receiver.GetLocalPath();
     }
     catch(...)
     {
@@ -250,36 +252,12 @@ bool beginPlan(){
     }
     return ExcutablePath.pps.empty()? false:true;
 }
-void reSolveRosMsg(const iau_ros_msgs::GridPtr& rosMsg)
-{
-//_time_register = ros::Time::now();
-    //if()
-//    obs.SetGridObsInfo(rosMsg);
-    obs.SetVirtualGridObsInfo();
-}
+
 void Process(){
     while(ros::ok())
     {
-        usleep(1e4);
-        boost::this_thread::sleep(boost::posix_time::milliseconds(5));
-        {
-            //获取ros消息
-            boost::mutex::scoped_lock lock(_mutex_update);
-            //if (!flag_updateLidar  )
-                //||fabs(_time_register.toSec() - _time_update.toSec()) < 0.01)
-                //ROS_WARN("No location messeage");
-                //continue;
-
-            try {
-                reSolveRosMsg(_LidarMsg);
-            }
-            catch (...){
-                ROS_WARN("_LidarMsg is null...");
-                continue;
-            }
-            lock.unlock();
-            flag_updateLidar =false;
-        }
+        usleep(1e3);
+        Location_receiver.reSolveRosMsg();
         //cout<<"开始规划"<<endl;
         bool flag_failed = beginPlan();
         //plan finished ,storage the data.
@@ -287,14 +265,13 @@ void Process(){
         //cout << "完成规划" << endl;
         //send4follow(flag_failed);
         send4Draw();
-
     }
 }
 int main(int argc, char **argv)
 {
     //common::DpPolyPathConfig config;
     readconfig(config);
-    Location_receiver.readPath();//读取一次路径信息
+    //Location_receiver.readPath();//读取一次路径信息
     ros::init(argc, argv, "test_ljy");//0711 测试RRT注掉
     ros::NodeHandle n;//一个node貌似可以接收多个消息
     // 发布
@@ -305,7 +282,7 @@ int main(int argc, char **argv)
     pubFollow = n.advertise<iau_ros_msgs::Follow>("IAU/Follow", 20);
 //订阅
     //订阅激光雷达的障碍物网格数据
-    ros::Subscriber sub_lidar = n.subscribe("/IAU/Grid",1,&LidarCallback);
+    ros::Subscriber sub_lidar = n.subscribe("/IAU/Grid",1,&LocationReceiver::LidarCallback,&Location_receiver);
     //订阅定位数据，gps+imu之后由position发出
     ros::Subscriber sub_Location = n.subscribe("/IAU/Location",10,&LocationReceiver::LocationCallback,&Location_receiver);
 
