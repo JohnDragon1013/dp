@@ -67,8 +67,8 @@ set(latticePlan_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(latticePlan_SOURCE_PREFIX /home/z/文档/latticePlan-dev)
-  set(latticePlan_DEVEL_PREFIX /home/z/文档/latticePlan-dev/cmake-build-debug/devel)
+  set(latticePlan_SOURCE_PREFIX /home/z/iau_ws/src/dp)
+  set(latticePlan_DEVEL_PREFIX /home/z/iau_ws/src/dp/cmake-build-debug/devel)
   set(latticePlan_INSTALL_PREFIX "")
   set(latticePlan_PREFIX ${latticePlan_DEVEL_PREFIX})
 else()
@@ -110,7 +110,7 @@ if(NOT " " STREQUAL " ")
         message(FATAL_ERROR "Project 'latticePlan' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'latticePlan' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/z/文档/latticePlan-dev/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'latticePlan' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/z/iau_ws/src/dp/${idir}'.  ${_report}")
     endif()
     _list_append_unique(latticePlan_INCLUDE_DIRS ${include})
   endforeach()
@@ -129,7 +129,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/z/文档/latticePlan-dev/cmake-build-debug/devel/lib;/home/z/catkin_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/z/iau_ws/src/dp/cmake-build-debug/devel/lib;/home/z/catkin_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

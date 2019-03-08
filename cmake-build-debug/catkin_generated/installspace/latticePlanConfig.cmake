@@ -67,8 +67,8 @@ set(latticePlan_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(latticePlan_SOURCE_PREFIX /home/z/文档/latticePlan-dev)
-  set(latticePlan_DEVEL_PREFIX /home/z/文档/latticePlan-dev/cmake-build-debug/devel)
+  set(latticePlan_SOURCE_PREFIX /home/z/iau_ws/src/dp)
+  set(latticePlan_DEVEL_PREFIX /home/z/iau_ws/src/dp/cmake-build-debug/devel)
   set(latticePlan_INSTALL_PREFIX "")
   set(latticePlan_PREFIX ${latticePlan_DEVEL_PREFIX})
 else()

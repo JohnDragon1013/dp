@@ -7,8 +7,8 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/z/文档/latticePlan-dev/cmake-build-debug/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/z/文档/latticePlan-dev/cmake-build-debug/devel/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="/home/z/文档/latticePlan-dev/cmake-build-debug/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/z/文档/latticePlan-dev/cmake-build-debug/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/jydragon/catkin_ws/src/latticePlan:/home/z/文档/latticePlan-dev:$ROS_PACKAGE_PATH"
+export CMAKE_PREFIX_PATH="/home/z/iau_ws/src/dp/cmake-build-debug/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/z/iau_ws/src/dp/cmake-build-debug/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/z/iau_ws/src/dp/cmake-build-debug/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/z/iau_ws/src/dp/cmake-build-debug/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/jydragon/catkin_ws/src/latticePlan:/home/z/文档/latticePlan-dev:/home/z/iau_ws/src/dp:$ROS_PACKAGE_PATH"

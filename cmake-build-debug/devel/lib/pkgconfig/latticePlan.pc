@@ -1,8 +1,8 @@
-prefix=/home/z/文档/latticePlan-dev/cmake-build-debug/devel
+prefix=/home/z/iau_ws/src/dp/cmake-build-debug/devel
 
 Name: latticePlan
 Description: Description of latticePlan
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/z/文档/latticePlan-dev/cmake-build-debug/devel/lib -llatticePlan -lPCL
+Libs: -L/home/z/iau_ws/src/dp/cmake-build-debug/devel/lib -llatticePlan -lPCL
 Requires: roscpp rospy std_msgs
