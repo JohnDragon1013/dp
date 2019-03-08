@@ -35,16 +35,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="df860cf5-e4bd-4070-9cd7-bf89ceaa59c8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CartesianFrenetConverter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/CartesianFrenetConverter.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/DPGraphPlan.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/LocationReceiver.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dp_plan/Obstacle.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/dp_plan/Obstacle.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/latticeplan.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/latticeplan.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="df860cf5-e4bd-4070-9cd7-bf89ceaa59c8" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -145,7 +136,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/dp_plan/TrajectoryCost.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-414">
+            <state relative-caret-position="-738">
               <caret line="59" column="38" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="38" />
               <folding>
                 <element signature="e#5998#6000#0" />
@@ -311,11 +302,11 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="69" />
-    <option name="y" value="96" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="1072" />
+    <option name="y" value="68" />
     <option name="width" value="1851" />
-    <option name="height" value="984" />
+    <option name="height" value="1012" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -628,12 +619,12 @@
       <workItem from="1551833358429" duration="2355000" />
       <workItem from="1551944811110" duration="4189000" />
       <workItem from="1551949853392" duration="6188000" />
-      <workItem from="1552010856553" duration="647000" />
+      <workItem from="1552010856553" duration="1122000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="463731000" />
+    <option name="totallyTimeSpent" value="464206000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -645,9 +636,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <frame x="1072" y="68" width="1851" height="1012" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21400993" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21448314" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -658,7 +649,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32977587" />
       <window_info anchor="bottom" id="CMake" order="7" weight="0.30843115" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.3180363" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.31791908" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.2913554" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.32870865" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.3815029" />
@@ -1106,7 +1097,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dp_plan/TrajectoryCost.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-414">
+        <state relative-caret-position="-738">
           <caret line="59" column="38" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="38" />
           <folding>
             <element signature="e#5998#6000#0" />
