@@ -110,7 +110,7 @@ void send4Draw(){
     co.z = 0;
     //collsionPo.r = 250;
     crashPoint.points.push_back(co);
-    ROS_INFO("begin to send path");
+    //ROS_INFO("begin to send path");
     //将路径坐标转换为局部
     for (size_t i = 0; i < ExcutablePath.pps.size(); ++i) {
         double xout, yout;
@@ -195,7 +195,7 @@ void send4Draw(){
 
     pcl_pubOtherPath.publish(otherPath_output);
     pcl_pubReferPath.publish(reference_output);
-    cout << "发送完成。。。" << endl;
+    //cout << "发送完成。。。" << endl;
 
 }
 //ofstream iput("/home/jydragon/catkin_ws/src/test/src/path.txt");
@@ -215,6 +215,7 @@ bool beginPlan(){
     g_currentLocation = Location_receiver.GetCurrentLocation();// np;
     try {
         wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity,obs);//Location_receiver.GetLocalPath();
+        cout<<"map: "<<targetIndex<<"\t";
     }
     catch(...)
     {
@@ -257,6 +258,8 @@ void Process(){
     while(ros::ok())
     {
         usleep(1e3);
+        if(!Location_receiver.flag_updateLidar)
+            continue;
         Location_receiver.reSolveRosMsg();
         //cout<<"开始规划"<<endl;
         bool flag_failed = beginPlan();
@@ -282,9 +285,9 @@ int main(int argc, char **argv)
     pubFollow = n.advertise<iau_ros_msgs::Follow>("IAU/Follow", 20);
 //订阅
     //订阅激光雷达的障碍物网格数据
-    ros::Subscriber sub_lidar = n.subscribe("/IAU/Grid",1,&LocationReceiver::LidarCallback,&Location_receiver);
+    ros::Subscriber sub_lidar = n.subscribe("IAU/Grid",10,&LocationReceiver::LidarCallback,&Location_receiver);
     //订阅定位数据，gps+imu之后由position发出
-    ros::Subscriber sub_Location = n.subscribe("/IAU/Location",10,&LocationReceiver::LocationCallback,&Location_receiver);
+    ros::Subscriber sub_Location = n.subscribe("IAU/Location",10,&LocationReceiver::LocationCallback,&Location_receiver);
 
     //订阅地图模块发送的数据
     ros::Subscriber subMap = n.subscribe("IAU/Map", 10,&LocationReceiver::MapCallback,&Location_receiver);

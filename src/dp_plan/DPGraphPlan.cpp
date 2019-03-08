@@ -83,7 +83,8 @@ void DPGraphPlan::UpdateNode(const std::list<DPRoadGraphNode> &prev_nodes,
         //计算到起点的cost
         const auto cost =
                 trajectory_cost->Calculate(curve, prev_sl_point.s, cur_point.s,
-                                           level, total_level) + prev_dp_point.min_cost;
+                                           level, total_level) +
+                                           prev_dp_point.min_cost;
 //        whole_level_cost.emplace_back(cost);
 //        whole_level_curve.emplace_back(curve);
 //        sum_smoothness += cost.smoothness_cost;
@@ -264,8 +265,8 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
     std::vector<DPRoadGraphNode> min_cost_path;
     if(!GenerateMinCostPath(&min_cost_path))
         return PathPointxy();
-    else
-        cout<<"生成最小cost路径成功"<<endl;
+//    else
+//        cout<<"生成最小cost路径成功"<<endl;
     common::FrenetFramePath finalFrenetpath=FindPathTunnel(min_cost_path);
 
     if(finalFrenetpath.empty())

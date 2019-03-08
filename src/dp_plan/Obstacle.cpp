@@ -71,11 +71,11 @@ void Obstacle::SetGridObsInfo(const iau_ros_msgs::GridPtr& cloud_ptr)
     }
     grid_widthX = 0.2;
     grid_widthY = 0.2;
-    grid_xl = cloud_ptr->width;//g_planinput.xl;
-    grid_xr = 0;//g_planinput.xr;
-    grid_yu = cloud_ptr->height;//g_planinput.yu;
-    grid_yd = 0;//g_planinput.yd;
-    GRID_WidthNum = grid_xl - grid_xr;
+    grid_xl = 0;
+    grid_xr = cloud_ptr->width;
+    grid_yu = cloud_ptr->height;
+    grid_yd = 0;
+    GRID_WidthNum = grid_xr-grid_xl  ;
     GRID_LengthNum = grid_yu- grid_yd;
     vector<unsigned char> griddata(GRID_Num);
     //此处需要加上去除地面的部分

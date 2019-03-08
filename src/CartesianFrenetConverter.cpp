@@ -176,18 +176,28 @@ bool CartesianFrenetConverter::XY2SL(const PathPointxy referxy,common::Reference
         return false;
     }
     double sum_s =0.0;
+    double dis =10000;
+    int index = -1;
+    for (int i = 0; i < referxy.pps.size(); ++i) {
+        double d =BasicStruct::Distance(g_currentLocation,referxy.pps[i]);
+        if(d<dis){
+            dis = d;
+            index = i;
+        }
+        if(i>20)
+            break;
+    }
     common::ReferencePoint lastp;// =referxy.pps[0];
-    lastp.x=referxy.pps[0].x;
-    lastp.y=referxy.pps[0].y;
-    lastp.heading =referxy.pps[0].angle;
+    lastp.x=referxy.pps[index].x;
+    lastp.y=referxy.pps[index].y;
+    lastp.heading =referxy.pps[index].angle;
     lastp.s =0.0;
     lastp.l=0.0;
     lastp.kappa_=0.0;
     lastp.dkappa_=0.0;
     referenceLine.reference_points_.push_back(lastp);
-
-    double k,dk,l;
-    for(int rexy=1;rexy<referxy.pps.size();++rexy)
+    //double k,dk,l;
+    for(int rexy=index+1;rexy<referxy.pps.size();++rexy)
     {
         common::ReferencePoint reSL;
         double dis =BasicStruct::Distance(referxy.pps[rexy],lastp);

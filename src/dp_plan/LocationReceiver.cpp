@@ -168,7 +168,7 @@ void LocationReceiver::LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
     {
         boost::mutex::scoped_lock lock(_mutex_update);
         _LidarMsg = cloud_ptr;
-        //flag_updateLidar = true;
+        flag_updateLidar = true;
         //_time_update = cloud_ptr->header.stamp;
         //obs.SetGridObsInfo(cloud_ptr);
 
@@ -185,9 +185,10 @@ void LocationReceiver::reSolveRosMsg(/*const iau_ros_msgs::GridPtr& rosMsg*/)
 //    obs.SetGridObsInfo(rosMsg);
     {
         boost::mutex::scoped_lock lock(_mutex_update);
-        m_obstacle.SetVirtualGridObsInfo();
-        //m_obstacle.SetGridObsInfo(_LidarMsg);
+        //m_obstacle.SetVirtualGridObsInfo();
+        m_obstacle.SetGridObsInfo(_LidarMsg);
         lock.unlock();
+        flag_updateLidar=false;
     }
     ChangeLaneDecide();
 }
@@ -287,6 +288,8 @@ bool LocationReceiver::ObstacleonLane(PathPointxy path, int &collisionindex ,dou
 ///判断是否需要换道
 void LocationReceiver::ChangeLaneDecide() {
     CollisionTest();
+    if(m_lanecollsion.empty())
+        return;
 
     //还需要计算前车距离和时间
     struct timeval t1, t2;
@@ -297,11 +300,14 @@ void LocationReceiver::ChangeLaneDecide() {
     auto deltaT = (t2.tv_sec - last_timeStamp.tv_sec) * 1000000 + t2.tv_usec - last_timeStamp.tv_usec;//微秒
     double dt = deltaT/1000000.0;
     double ObsSpeed =curSpeed- ((last_ObsDis - m_lanecollsion[m_curindex])/dt);
+    if(ObsSpeed>10) //
+        ObsSpeed = 8;
+    ObsSpeed= ObsSpeed<0?0:ObsSpeed;
 
     double safe_Dis = 1.5*curSpeed + (curSpeed*curSpeed - ObsSpeed*ObsSpeed)/(2*0.7*9.8);//安全距离计算方式，详见论文
 
     last_timeStamp = t2;
-    if (m_lanecollsion[m_maptargetindex] >= safe_Dis)
+    if (m_lanecollsion[m_maptargetindex] >= 15)//safe_Dis)
     {
         //沿当前车道前行 速度按照障碍物速度发送
     }

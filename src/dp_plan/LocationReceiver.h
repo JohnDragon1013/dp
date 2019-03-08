@@ -19,7 +19,7 @@
 #define _num_MaxBuffer 300
 class LocationReceiver {
 public:
-    LocationReceiver():pathIndex(0),m_curindex(-1),m_maptargetindex(-1),m_velocity(-1){
+    LocationReceiver():pathIndex(0),m_curindex(-1),m_maptargetindex(-1),m_velocity(-1),last_ObsDis(100){
         log.open("logFile.txt");
         m_initialPoint.x=-11111;
     };
@@ -43,7 +43,7 @@ public:
         return m_Lane;};
     void ChangeLaneDecide();
     void reSolveRosMsg();
-
+    bool flag_updateLidar =false;
 private:
     void CollisionTest();
     bool ObstacleonLane(PathPointxy path, int &collisionindex ,double &collisionDis);
