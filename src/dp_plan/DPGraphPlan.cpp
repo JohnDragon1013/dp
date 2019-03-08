@@ -46,6 +46,7 @@ bool DPGraphPlan::SamplePathWaypoints(const common::TrajectoryPoint &init_point)
         if(accumulated_s>=30)
             step_length =15.0;
     }
+    log<<as.size()*as.front().size()<<"\t";
     m_AllSamplePoints=as;
     if(m_AllSamplePoints.empty())
         return false;
@@ -380,7 +381,16 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
     gettimeofday(&t2, NULL);
     auto deltaT = (t2.tv_sec - t1.tv_sec) * 1000000 + t2.tv_usec - t1.tv_usec;//微秒
     cout<< "deltat:" << deltaT / 1000<<endl;
+    log<<deltaT<<"\n";
+    logpath(path);
     return path;
+}
+
+void DPGraphPlan::logpath(const PathPointxy &pa){
+    for(const auto &per_point:pa.pps)
+    {
+        log<<per_point.x<<"\t"<<per_point.y<<"\t"<<per_point.angle<<"\t"<<per_point.k<<"\n";//这里的k不一定 是对的
+    }
 }
 
 bool DPGraphPlan::ChooseMinCostPath(std::list<std::list<DPRoadGraphNode>> graph_nodes,std::vector<DPRoadGraphNode> *min_cost_path)

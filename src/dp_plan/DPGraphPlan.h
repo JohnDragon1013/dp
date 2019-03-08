@@ -11,7 +11,7 @@
 
 #include "TrajectoryCost.h"
 #include "common.h"
-
+#include <fstream>
 
 
 class DPGraphPlan {
@@ -60,7 +60,9 @@ public:
       m_obstacles(ob),
       config_(config),
       m_lastFrenetPath(lastSLpath)
-    {};
+    {
+        log.open("PlanData.txt");
+    };
     ~DPGraphPlan()= default;
     PathPointxy Getfinalpath(common::FrenetFramePath &lastFrenetPath);
     //inline std::vector<common::FrenetFramePoint> Getpath(){ return m_fanalFrenetpath;};
@@ -76,6 +78,7 @@ private:
     bool ChooseMinCostPath(std::list<std::list<DPRoadGraphNode>> graph_nodes,std::vector<DPRoadGraphNode> *min_cost_path);
     double StepbyObstacle();
     std::vector<common::FrenetFramePoint> FindPathTunnel(std::vector<DPRoadGraphNode> _path);//最后生成路径之后进行评价
+    void logpath(const PathPointxy &pa);
     common::DpPolyPathConfig config_;
     common::TrajectoryPoint init_point_;//路径点
     const PathPointxy referXYPath;//xy坐标
@@ -92,7 +95,7 @@ private:
     bool IsValidCurve(const QuinticPolynomialCurve1d &curve) const;
     vector<vector<DPRoadGraphNode>> m_AllpathNode;
     vector<PathPointxy> m_AllxyPath;
-
+    ofstream log;
 };
 
 

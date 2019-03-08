@@ -258,8 +258,10 @@ void Process(){
     while(ros::ok())
     {
         usleep(1e3);
-        if(!Location_receiver.flag_updateLidar)
+        if(!Location_receiver.flag_updateLidar) {
+            cout<<"no lidar"<<endl;
             continue;
+        }
         Location_receiver.reSolveRosMsg();
         //cout<<"开始规划"<<endl;
         bool flag_failed = beginPlan();
