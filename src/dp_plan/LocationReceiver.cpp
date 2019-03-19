@@ -178,19 +178,21 @@ void LocationReceiver::LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
     }
     //Location_receiver.setLidarTime(cloud_ptr->header.stamp.toSec());
 }
-void LocationReceiver::reSolveRosMsg(/*const iau_ros_msgs::GridPtr& rosMsg*/)
+bool LocationReceiver::reSolveRosMsg(/*const iau_ros_msgs::GridPtr& rosMsg*/)
 {
-//_time_register = ros::Time::now();
-    //if()
-//    obs.SetGridObsInfo(rosMsg);
+    m_obstacle.SetVirtualGridObsInfo();
+    return true;
+    if(flag_updateLidar)
     {
         boost::mutex::scoped_lock lock(_mutex_update);
-        //m_obstacle.SetVirtualGridObsInfo();
+
         m_obstacle.SetGridObsInfo(_LidarMsg);
         lock.unlock();
         flag_updateLidar=false;
-    }
+    } else
+        return false;
     ChangeLaneDecide();
+    return true;
 }
 void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函数是为了记录地图写的
     if(m_initialPoint.x==-11111)// 避免坐标原点未被赋值

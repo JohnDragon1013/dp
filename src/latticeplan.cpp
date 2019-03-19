@@ -89,8 +89,8 @@ void send4Draw(){
     //车道线
     lane_path.id=4;
     lane_path.type = visualization_msgs::Marker::POINTS;
-    lane_path.scale.x = 0.5;
-    lane_path.scale.y = 0.5;
+    lane_path.scale.x = 0.2;
+    lane_path.scale.y = 0.1;
     lane_path.color.r = 50;
     lane_path.color.g = 50;
     lane_path.color.b = 50.0;
@@ -140,6 +140,8 @@ void send4Draw(){
         p.x = temp.x;
         p.y = temp.y-1.5;
         p.z = temp.z;
+        lane_path.points.push_back(p);
+        p.y = temp.y+1.5;
         lane_path.points.push_back(p);
     }
 
@@ -258,11 +260,11 @@ void Process(){
     while(ros::ok())
     {
         usleep(1e3);
-        if(!Location_receiver.flag_updateLidar) {
+        if(!Location_receiver.reSolveRosMsg())
+        {
             cout<<"no lidar"<<endl;
             continue;
         }
-        Location_receiver.reSolveRosMsg();
         //cout<<"开始规划"<<endl;
         bool flag_failed = beginPlan();
         //plan finished ,storage the data.

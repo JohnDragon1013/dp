@@ -42,7 +42,7 @@ public:
     obs=m_obstacle;
         return m_Lane;};
     void ChangeLaneDecide();
-    void reSolveRosMsg();
+    bool reSolveRosMsg();
     bool flag_updateLidar =false;
 private:
     void CollisionTest();

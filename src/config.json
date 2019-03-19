@@ -15,5 +15,5 @@
   "path_l_cost_param_b":0.40,
   "path_l_cost_param_k":1.5,
   "path_out_lane_cost" :100000000,
-  "path_end_l_cost" :10000
+  "path_end_l_cost" :100000
 }
