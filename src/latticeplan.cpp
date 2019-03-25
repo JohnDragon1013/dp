@@ -137,12 +137,12 @@ void send4Draw(){
         temp.b =200.0;
         reference_Path.points.push_back(temp);
         geometry_msgs::Point p;
-        p.x = temp.x;
-        p.y = temp.y-1.5;
+        p.x = temp.x + 1.5*cos(referLane.pps[i].angle);
+        p.y = temp.y-1.5*sin(referLane.pps[i].angle);
         p.z = temp.z;
         lane_path.points.push_back(p);
-        p.y = temp.y+1.5;
-        lane_path.points.push_back(p);
+        //p.y = temp.y+1.5;
+        //lane_path.points.push_back(p);
     }
 
     vector<unsigned char> griddata = obs.GetGridObs();
@@ -196,7 +196,7 @@ void send4Draw(){
     pcl_pubPath.publish(crashPoint);
 //    pcl_pubReferPath.publish(points_refer);
     pcl_pubPath.publish(line_path);
-//    pcl_pubPath.publish(lane_path);
+    //pcl_pubPath.publish(lane_path);
 
     pcl_pubOtherPath.publish(otherPath_output);
     pcl_pubReferPath.publish(reference_output);
@@ -217,7 +217,6 @@ int targetIndex;
 double velocity;
 common::DpPolyPathConfig config;
 bool beginPlan(){
-    referLane = wholeReferLane[targetIndex];
     //RoadPoint s(0,-5,0,0);
         //要将xy转换为sl
     common::ReferenceLine reference_line_info;
@@ -275,25 +274,16 @@ void Process(){
         usleep(1e3);
         g_currentLocation = Location_receiver.GetCurrentLocation();// np;
         TravelingDis = BasicStruct::Distance(lastLocation,g_currentLocation);
-        try {
-            wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity,obs);//Location_receiver.GetLocalPath();
-            //cout<<"map: "<<targetIndex<<"\t";
-        }
-        catch(...)
-        {
-            ROS_WARN("referLane update failed... size::[%d]",wholeReferLane.size());
-            continue ;
-        }
-        if(map_invalid(wholeReferLane,curIndex,targetIndex))
-        {
-            ROS_WARN("map invalid!");
-            continue ;
-        }
+//        wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity,obs);
+//        if(map_invalid(wholeReferLane,curIndex,targetIndex))
+//        {
+//            ROS_WARN("map invalid!");
+//            continue ;
+//        }
         if(!Location_receiver.reSolveRosMsg())
         {
-            //cout<<"no lidar"<<endl;
-            //continue;
         }
+        referLane = Location_receiver.GetLocalPath();
         //add the replan function
         if(Replan())
         {
@@ -311,7 +301,7 @@ int main(int argc, char **argv)
 {
     //common::DpPolyPathConfig config;
     readconfig(config);
-    //Location_receiver.readPath();//读取一次路径信息
+    Location_receiver.readPath();//读取一次路径信息
     ros::init(argc, argv, "test_ljy");//0711 测试RRT注掉
     ros::NodeHandle n;//一个node貌似可以接收多个消息
     // 发布
@@ -339,8 +329,6 @@ int main(int argc, char **argv)
     //ros::Subscriber subReverseLane = n.subscribe("IAU/Reverse", 10, reverseMap_message);
     //订阅地图模块发布的建议速度信息
     ros::Subscriber subVelocity = n.subscribe("IAU/MapVelocity", 10, &LocationReceiver::VelocityCallback,&Location_receiver);
-    //
-
 
     _time_update= ros::Time();
     _time_register =ros::Time();//-.now().toSec()

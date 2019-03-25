@@ -41,6 +41,7 @@ public:
     velocity = m_carStatus.speed;
     obs=m_obstacle;
         return m_Lane;};
+//    inline PathPointxy
     void ChangeLaneDecide();
     bool ObstacleonLane(PathPointxy path, int &collisionindex ,double &collisionDis);
     double DisCurrentToPath(PathPointxy path);

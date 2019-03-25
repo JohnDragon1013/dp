@@ -14,9 +14,9 @@ void LocationReceiver::LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr
     //存储，后面的全去掉
     tempp.x = map_ptr->gau_pos[0];
     tempp.y = map_ptr->gau_pos[1];
-    tempp.angle = map_ptr->orientation[2] *PI/180.0;
+    tempp.angle = map_ptr->orientation[2] ;//*PI/180.0;
     //此处需要将坐标转成高斯坐标 然后更新当前点坐标，待添加
-    tempp = BasicStruct::GussiantoDikaer(tempp);
+    //tempp = BasicStruct::GussiantoDikaer(tempp);
     if(!flag_initial)
     {
         m_initialPoint = tempp;
@@ -30,10 +30,6 @@ PathPointxy LocationReceiver::GetLocalPath() {
     //updatelocation();
     if(m_wholereferpath.pps.empty())
         return PathPointxy();
-    //if(maybelocation.empty())
-     //   return PathPointxy();
-
-    //原来的问题应该在这里。
     if(g_currentLocation.x==0&&g_currentLocation.y==0&&g_currentLocation.angle ==0&&g_currentLocation.k ==0)
         return PathPointxy();
 
@@ -82,12 +78,12 @@ PathPointxy LocationReceiver::GetLocalPath() {
     //cout<<"局部路径获取完成，大小："<<tempLane.pps.size()<<endl;
     if(tempLane.pps.empty()||lengtaa<30)
         return PathPointxy();
-    else
+
         //m_referLane= tempLane;
     return tempLane;
 }
 bool LocationReceiver::readPath(){
-    ifstream ifile("/home/z/下载/latticePlan-master/src/testmap.txt");
+    ifstream ifile("/home/z/文档/仿真地图/more-C.txt");
     if(!ifile){
         cout<<"读取文件失败"<<endl;
         return false;
@@ -95,12 +91,12 @@ bool LocationReceiver::readPath(){
     RoadPoint ptemp;
     ifile >> ptemp.x >> ptemp.y >> ptemp.angle;
     //此处需要转换成高斯坐标 角度已经转换过了
-    m_initialPoint = BasicStruct::LongLattoGussian(ptemp);//坐标初始位置
+    m_initialPoint = ptemp;//BasicStruct::LongLattoGussian(ptemp);//坐标初始位置
     RoadPoint last=m_initialPoint;
     while(!ifile.eof()) {
         ifile >> ptemp.x >> ptemp.y >> ptemp.angle;
         //此处需要转换成高斯坐标 角度已经转换过了
-        ptemp = BasicStruct::LongLattoGussian(ptemp);
+        //ptemp = BasicStruct::LongLattoGussian(ptemp);
         RoadPoint localpoint;
         localpoint.x = ptemp.x - m_initialPoint.x;
         localpoint.y = ptemp.y - m_initialPoint.y;
