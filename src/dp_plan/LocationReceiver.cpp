@@ -180,8 +180,8 @@ void LocationReceiver::LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
 }
 bool LocationReceiver::reSolveRosMsg(/*const iau_ros_msgs::GridPtr& rosMsg*/)
 {
-    m_obstacle.SetVirtualGridObsInfo();
-    return true;
+//    m_obstacle.SetVirtualGridObsInfo();
+//    return true;
     if(flag_updateLidar)
     {
         boost::mutex::scoped_lock lock(_mutex_update);
@@ -206,6 +206,8 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
     vector<PathPointxy> LaneInfo;
     for (auto& lane : map.road) {
         PathPointxy lp;
+//        RoadPoint lastrp;
+//        bool falg =1;
         for (auto& pt : lane.points) {
             if (pt.x != -1000&& pt.x != -100000) {
                 RoadPoint rp;
@@ -219,7 +221,16 @@ void LocationReceiver::MapCallback(const iau_ros_msgs::MapPtr& map_ptr){//该函
                 re.x = di.x - m_initialPoint.x;
                 re.y = di.y - m_initialPoint.y;
                 re.angle = di.angle;
+//                if(falg) {
+//                    re.k = 0;
+//                    falg=0;
+//                }
+//                else{
+//                    double dis = BasicStruct::Distance(re,lastrp);
+//                    re.k = (re.angle-lastrp.angle)/dis;
+//                }
                 lp.pps.push_back(re);
+                //lastrp = re;
             }
         }
 		LaneInfo.push_back(lp);
@@ -286,6 +297,19 @@ bool LocationReceiver::ObstacleonLane(PathPointxy path, int &collisionindex ,dou
         }
     }
     return 0;
+}
+double LocationReceiver::DisCurrentToPath(PathPointxy path)
+{
+    double minDis = MAXD;
+    for (int i = 0; i<path.pps.size(); i++)
+    {
+        double Dis = BasicStruct::Distance(path.pps[i], g_currentLocation);
+        if (Dis<minDis)
+        {
+            minDis = Dis;
+        }
+    }
+    return minDis;
 }
 ///判断是否需要换道
 void LocationReceiver::ChangeLaneDecide() {

@@ -180,7 +180,9 @@ bool CartesianFrenetConverter::XY2SL(const PathPointxy referxy,common::Reference
     int index = -1;
     for (int i = 0; i < referxy.pps.size(); ++i) {
         double d =BasicStruct::Distance(g_currentLocation,referxy.pps[i]);
-        if(d<dis){
+        double angle3 = atan2(referxy.pps[i].y-g_currentLocation.y,referxy.pps[i].x-g_currentLocation.x);
+        double anglediff = cos(abs(angle3-g_currentLocation.angle));
+        if(d<dis&&anglediff>0){
             dis = d;
             index = i;
         }
@@ -196,21 +198,23 @@ bool CartesianFrenetConverter::XY2SL(const PathPointxy referxy,common::Reference
     lastp.kappa_=0.0;
     lastp.dkappa_=0.0;
     referenceLine.reference_points_.push_back(lastp);
-    //double k,dk,l;
+    double k,dk,l;
     for(int rexy=index+1;rexy<referxy.pps.size();++rexy)
     {
         common::ReferencePoint reSL;
-        double dis =BasicStruct::Distance(referxy.pps[rexy],lastp);
+        //double dis =BasicStruct::Distance(referxy.pps[rexy],lastp);
 
-        //Clothoid::buildClothoid(lastp.x,lastp.y,lastp.heading,referxy.pps[rexy].x,referxy.pps[rexy].y,referxy.pps[rexy].angle,k,dk,l);
-        sum_s+=dis;
+        Clothoid::buildClothoid(lastp.x,lastp.y,lastp.heading,referxy.pps[rexy].x,referxy.pps[rexy].y,referxy.pps[rexy].angle,k,dk,l);
+        sum_s+=l;
+//        if(sum_s>10)
+//            break;
         reSL.s =sum_s;
         reSL.l =0.0;
         reSL.x =referxy.pps[rexy].x;
         reSL.y =referxy.pps[rexy].y;
         reSL.heading = referxy.pps[rexy].angle;
-        reSL.kappa_ =0.0;//(referxy.pps[rexy].angle-lastp.heading)/dis;
-        reSL.dkappa_ =0.0;//(reSL.kappa_-lastp.kappa_)/dis;
+        reSL.kappa_ =k;//referxy.pps[rexy].k;//(referxy.pps[rexy].angle-lastp.heading)/dis;
+        reSL.dkappa_ =dk;//(reSL.kappa_-lastp.kappa_)/dis;
         lastp =reSL;//ferxy.pps[rexy];
         referenceLine.reference_points_.push_back(reSL);
     }
@@ -219,3 +223,25 @@ bool CartesianFrenetConverter::XY2SL(const PathPointxy referxy,common::Reference
         return false;
     return true;
 }
+
+common::TrajectoryPoint CartesianFrenetConverter::initial_Point_trans(common::ReferencePoint nearRefer, RoadPoint pointxy, double v,
+                                                   double a, double kappa){
+    //输出  s 三阶  d 三阶
+    std::array<double, 3> ptr_s_condition;
+    std::array<double, 3> ptr_d_condition;
+
+
+    cartesian_to_frenet(nearRefer.s,nearRefer.x,nearRefer.y,nearRefer.heading,nearRefer.kappa_,nearRefer.dkappa_,
+            pointxy.x,pointxy.y,v,a,pointxy.angle,kappa,&ptr_s_condition,&ptr_d_condition);
+    common::TrajectoryPoint start;
+    start.path_point.x=pointxy.x;
+    start.path_point.y=pointxy.y;
+    start.path_point.theta=pointxy.angle;
+    start.path_point.s=ptr_s_condition.front();
+    start.path_point.l=ptr_d_condition.front();
+    start.v = v;
+    start.a = a;
+    return start;
+}
+
+

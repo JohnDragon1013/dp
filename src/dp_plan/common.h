@@ -46,6 +46,8 @@ namespace common {
         // accumulated distance from beginning of the path
         double s;
 
+        double l;
+
         // derivative of kappa w.r.t s.
         double dkappa;
         // derivative of derivative of kappa w.r.t s.
@@ -54,6 +56,7 @@ namespace common {
         //string lane_id;
     };
     struct TrajectoryPoint {
+        TrajectoryPoint(){};
         TrajectoryPoint(double v_,double a_):v(v_),a(a_),relative_time(0){}
         // path point
         PathPoint path_point;

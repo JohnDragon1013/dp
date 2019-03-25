@@ -37,9 +37,9 @@ ros::Publisher pcl_pubOtherPath ;
 ros::Publisher pcl_pubReferPath ;
 ros::Publisher pubFollow;
 
+bool flag_PlanSucceed=false;
+double TravelingDis = 0;
 ros::Time _time_update;
-
-bool flag_updateLidar=false;
 ros::Time _time_register;
 void send4Draw(){
     //发送路径信息
@@ -61,8 +61,8 @@ void send4Draw(){
     //sensor_msgs::PointCloud2 obs_output;
     obsCloud.id = 1;
     obsCloud.type = visualization_msgs::Marker::POINTS;
-    obsCloud.scale.x = 0.3;
-    obsCloud.scale.y = 0.3;
+    obsCloud.scale.x = 0.2;
+    obsCloud.scale.y = 0.2;
     obsCloud.color.g = 1.0;
     obsCloud.color.a = 1.0;
     //pcl::PointCloud<pcl::PointXYZ> cloud;
@@ -89,14 +89,14 @@ void send4Draw(){
     //车道线
     lane_path.id=4;
     lane_path.type = visualization_msgs::Marker::POINTS;
-    lane_path.scale.x = 0.2;
+    lane_path.scale.x = 0.3;
     lane_path.scale.y = 0.1;
-    lane_path.color.r = 50;
-    lane_path.color.g = 50;
-    lane_path.color.b = 50.0;
+    lane_path.color.r = 0;
+    lane_path.color.g = 0;
+    lane_path.color.b = 0;
     lane_path.color.a = 1.0;
     //其他路径
-    pcl::PointCloud<pcl::PointXYZ> other_Path;
+    pcl::PointCloud<pcl::PointXYZRGB> other_Path;
     sensor_msgs::PointCloud2 otherPath_output;
 
     //参考路径
@@ -176,10 +176,13 @@ void send4Draw(){
                 RoadPoint org = g_currentLocation;
                 org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
                 BasicStruct::WorldtoMap(org, path4draw[l].pps[m].x, path4draw[l].pps[m].y, xout, yout);
-                pcl::PointXYZ p;
+                pcl::PointXYZRGB p;
                 p.x = yout;
                 p.y = -xout;
                 p.z = 0;
+                p.a=1.0;
+                p.r = 1;
+                p.b = 2;
                 other_Path.points.push_back(p);
             }
         }
@@ -193,7 +196,7 @@ void send4Draw(){
     pcl_pubPath.publish(crashPoint);
 //    pcl_pubReferPath.publish(points_refer);
     pcl_pubPath.publish(line_path);
-    pcl_pubPath.publish(lane_path);
+//    pcl_pubPath.publish(lane_path);
 
     pcl_pubOtherPath.publish(otherPath_output);
     pcl_pubReferPath.publish(reference_output);
@@ -214,27 +217,14 @@ int targetIndex;
 double velocity;
 common::DpPolyPathConfig config;
 bool beginPlan(){
-    g_currentLocation = Location_receiver.GetCurrentLocation();// np;
-    try {
-        wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity,obs);//Location_receiver.GetLocalPath();
-        cout<<"map: "<<targetIndex<<"\t";
-    }
-    catch(...)
-    {
-        ROS_WARN("referLane update failed... size::[%d]",wholeReferLane.size());
-        return false;
-    }
-    if(map_invalid(wholeReferLane,curIndex,targetIndex))
-    {
-        ROS_WARN("map invalid!");
-        return false;
-    }
     referLane = wholeReferLane[targetIndex];
-    common::TrajectoryPoint startPo(velocity,0.0);
+    //RoadPoint s(0,-5,0,0);
         //要将xy转换为sl
     common::ReferenceLine reference_line_info;
     if(CartesianFrenetConverter::XY2SL(referLane,reference_line_info)) {
-        DPGraphPlan dpp(config, referLane, startPo, reference_line_info, obs ,last_path_);
+        auto init = CartesianFrenetConverter::initial_Point_trans(reference_line_info.reference_points_.front(),g_currentLocation,velocity,0,0);
+        init.path_point.l=0;//仿真实验，真实环境需要注释掉
+        DPGraphPlan dpp(config, referLane, init, reference_line_info, obs ,last_path_);
         //cout << "start Plan" << endl;
         PathPointxy ep = dpp.Getfinalpath(last_path_);
         path4draw = dpp.GetAllPath();
@@ -255,22 +245,65 @@ bool beginPlan(){
     }
     return ExcutablePath.pps.empty()? false:true;
 }
-
+bool Replan(){
+    bool flag_pathempty = 0;		// 规划路径为空触发重规划标志
+    bool flag_pathcollision = 0;	// 规划路径有障碍物触发重规划标志
+    bool flag_traveldis = 0;		// 行驶距离触发的重规划标志（主动触发策略）
+    bool flag_cartopath = 0;		// 车偏离规划路径触发的重规划标志
+    int collisionpoint;
+    double collisionDis;
+    flag_pathempty = ExcutablePath.pps.empty();
+    flag_pathcollision = Location_receiver.ObstacleonLane(ExcutablePath, collisionpoint, collisionDis);
+    // 掉头模式下碰撞检测只需要考虑一定距离内的，因为需要掉头时，当前方向上有障碍物，无法通行，这里采用了 3m
+    // 有障碍情况下，是否需要重规划的策略判断
+    int m_Threholdtraveldis = ExcutablePath.length * 0.25;
+    flag_traveldis = (TravelingDis > m_Threholdtraveldis);
+    flag_cartopath = Location_receiver.DisCurrentToPath(ExcutablePath) > 2.0;
+    if (!flag_PlanSucceed || flag_pathempty || flag_pathcollision || flag_traveldis ||
+        flag_cartopath )//|| flag_changeLane )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 void Process(){
     while(ros::ok())
     {
         usleep(1e3);
+        g_currentLocation = Location_receiver.GetCurrentLocation();// np;
+        TravelingDis = BasicStruct::Distance(lastLocation,g_currentLocation);
+        try {
+            wholeReferLane = Location_receiver.GetMap(curIndex,targetIndex,velocity,obs);//Location_receiver.GetLocalPath();
+            //cout<<"map: "<<targetIndex<<"\t";
+        }
+        catch(...)
+        {
+            ROS_WARN("referLane update failed... size::[%d]",wholeReferLane.size());
+            continue ;
+        }
+        if(map_invalid(wholeReferLane,curIndex,targetIndex))
+        {
+            ROS_WARN("map invalid!");
+            continue ;
+        }
         if(!Location_receiver.reSolveRosMsg())
         {
-            cout<<"no lidar"<<endl;
-            continue;
+            //cout<<"no lidar"<<endl;
+            //continue;
         }
-        //cout<<"开始规划"<<endl;
-        bool flag_failed = beginPlan();
+        //add the replan function
+        if(Replan())
+        {
+            flag_PlanSucceed = beginPlan();
+            lastLocation = g_currentLocation;
         //plan finished ,storage the data.
         //Location_receiver.logfile();
-        //cout << "完成规划" << endl;
+        }
         //send4follow(flag_failed);
+
         send4Draw();
     }
 }
@@ -310,10 +343,10 @@ int main(int argc, char **argv)
 
 
     _time_update= ros::Time();
-    _time_register =ros::Time();
+    _time_register =ros::Time();//-.now().toSec()
     //boost::function0<void> f = boost::bind(&send4Draw,1);
-    boost::thread thread_viewer(&Process);
-    thread_viewer.detach();
+    boost::thread thread_(&Process);
+    thread_.detach();
     std::cout<<"Start Listening!"<<std::endl;
     //MsgCallback(n);
     while (ros::ok())

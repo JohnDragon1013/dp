@@ -62,6 +62,8 @@ public:
       m_lastFrenetPath(lastSLpath)
     {
         log.open("PlanData.txt");
+        init_sl_point_.s= init_point_.path_point.s;
+        init_sl_point_.l= init_point_.path_point.l;
     };
     ~DPGraphPlan()= default;
     PathPointxy Getfinalpath(common::FrenetFramePath &lastFrenetPath);
@@ -79,6 +81,7 @@ private:
     double StepbyObstacle();
     std::vector<common::FrenetFramePoint> FindPathTunnel(std::vector<DPRoadGraphNode> _path);//最后生成路径之后进行评价
     void logpath(const PathPointxy &pa);
+    void logFrenetpath(const common::FrenetFramePath &pa);
     common::DpPolyPathConfig config_;
     common::TrajectoryPoint init_point_;//路径点
     const PathPointxy referXYPath;//xy坐标

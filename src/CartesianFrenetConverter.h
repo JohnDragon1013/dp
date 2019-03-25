@@ -45,6 +45,11 @@ public:
                                     const double ry, const double rtheta,
                                     const double x, const double y, double* ptr_s,
                                     double* ptr_d);
+    /**
+     * translate initial point from cartesian frame to Frenet frame
+     */
+     static common::TrajectoryPoint initial_Point_trans(common::ReferencePoint nearRefer,RoadPoint pointxy,double v,double a,double kappa
+             );
 
     /**
      * Convert a vehicle state in Frenet frame to Cartesian frame.

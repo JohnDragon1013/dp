@@ -4,7 +4,7 @@
   "lateral_sample_offset":4.0,
   "lateral_sample_offset_step":1.0,
   "eval_time_interval":0.1 ,
-  "path_resolution" :0.1,
+  "path_resolution" :1.0,
   "obstacle_ignore_distance" :20.0,
   "obstacle_collision_cost":1000 ,
   "historical_l_cost" : 200,
@@ -15,5 +15,5 @@
   "path_l_cost_param_b":0.40,
   "path_l_cost_param_k":1.5,
   "path_out_lane_cost" :100000000,
-  "path_end_l_cost" :100000
+  "path_end_l_cost" :5000
 }

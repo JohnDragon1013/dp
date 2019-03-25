@@ -42,11 +42,13 @@ public:
     obs=m_obstacle;
         return m_Lane;};
     void ChangeLaneDecide();
+    bool ObstacleonLane(PathPointxy path, int &collisionindex ,double &collisionDis);
+    double DisCurrentToPath(PathPointxy path);
     bool reSolveRosMsg();
     bool flag_updateLidar =false;
 private:
     void CollisionTest();
-    bool ObstacleonLane(PathPointxy path, int &collisionindex ,double &collisionDis);
+
 
     RoadPoint m_initialPoint;
     RoadPoint currentLocation;

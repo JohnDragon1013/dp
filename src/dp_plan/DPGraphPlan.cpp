@@ -88,14 +88,11 @@ void DPGraphPlan::UpdateNode(const std::list<DPRoadGraphNode> &prev_nodes,
                                            prev_dp_point.min_cost;
 //        whole_level_cost.emplace_back(cost);
 //        whole_level_curve.emplace_back(curve);
-//        sum_smoothness += cost.smoothness_cost;
-//        sum_historical += cost.historical_cost;
-//        sum_obstacle += cost.safety_cost;
         // 根据代价最小的原则，在前一level所有航点中找到与当前点连接代价最小的航点，
         // 存储结果
         cur_node->UpdateCost(&prev_dp_point, curve, cost);
-       // if(cur_node->min_cost.cost_items[ComparableCost::HAS_COLLISION])
-        //    cur_node->min_cost_prev_node = nullptr;
+        if(cur_node->min_cost.cost_items[ComparableCost::HAS_COLLISION])
+            cur_node->min_cost_prev_node = nullptr;
 //        logfile<<cost.smoothness_cost<<" "<<cost.historical_cost<< " " ;
     }
 //    logfile<<"\nsum_smoothness:"<<sum_smoothness<<"   sum_obstacle:"<<sum_obstacle<<endl;
@@ -209,7 +206,7 @@ bool DPGraphPlan::GenerateMinCostPath(std::vector<DPRoadGraphNode> *min_cost_pat
 std::vector<common::FrenetFramePoint> DPGraphPlan::FindPathTunnel(std::vector<DPRoadGraphNode> min_cost_path) {
     std::vector<common::FrenetFramePoint> frenet_path;//最终的路径
     float accumulated_s = init_sl_point_.s;//累计的s
-    const float path_resolution =10* config_.path_resolution;
+    const float path_resolution = config_.path_resolution;
 
     for (std::size_t i = 1; i < min_cost_path.size(); ++i) {
         const auto &prev_node = min_cost_path[i - 1];
@@ -269,7 +266,8 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
 //    else
 //        cout<<"生成最小cost路径成功"<<endl;
     common::FrenetFramePath finalFrenetpath=FindPathTunnel(min_cost_path);
-
+    log<<endl<<"Frenet path:"<<endl;
+    logFrenetpath(finalFrenetpath);
     if(finalFrenetpath.empty())
         return PathPointxy();
     lastFrenetPath = finalFrenetpath;
@@ -312,7 +310,7 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
         double v = 0.0;
         double a = 0.0;
         CartesianFrenetConverter::frenet_to_cartesian(
-                frenetp.s,referpoint.x,referpoint.y,referpoint.heading,0.0,0.0,
+                frenetp.s,referpoint.x,referpoint.y,referpoint.heading,referpoint.kappa_,referpoint.dkappa_,
                 s_conditions,d_conditions,&x, &y,
                 &theta, &kappa, &v, &a);
 
@@ -321,12 +319,14 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
             cout<<"aa"<<endl;
         path.pps.push_back(ptemp);
     }
-
+    path.length = finalFrenetpath.back().s;
+    //log<<endl<<"dikaer path:"<<endl;
     //这里用来提取所有路径。
     vector<vector<common::FrenetFramePoint>> AllpathFrenetPoint;
     for (int i = 0; i < m_AllpathNode.size(); ++i) {
         std::vector<common::FrenetFramePoint> temp_;
         temp_ =FindPathTunnel(m_AllpathNode[i]);
+        logFrenetpath(temp_);
         AllpathFrenetPoint.push_back(temp_);
     }
     vector<PathPointxy> apxy;
@@ -363,13 +363,14 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
             double v = 0.0;
             double a = 0.0;
             CartesianFrenetConverter::frenet_to_cartesian(
-                    frenetp.s, referpoint.x, referpoint.y, referpoint.heading, 0.0, 0.0,
+                    frenetp.s, referpoint.x, referpoint.y, referpoint.heading, referpoint.kappa_, referpoint.dkappa_,
                     s_conditions, d_conditions, &x, &y,
                     &theta, &kappa, &v, &a);
             RoadPoint ptemp(x, y, theta, kappa);
             temp_.pps.push_back(ptemp);
         }
         apxy.push_back(temp_);
+        logpath(temp_);
     }
     m_AllxyPath = apxy;
     //cout<<"最后提取的路径数量："<<m_AllxyPath.size()<<endl;
@@ -381,17 +382,29 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
     gettimeofday(&t2, NULL);
     auto deltaT = (t2.tv_sec - t1.tv_sec) * 1000000 + t2.tv_usec - t1.tv_usec;//微秒
     cout<< "deltat:" << deltaT / 1000<<endl;
-    log<<deltaT<<"\n";
+    log<<"deltaT:"<<deltaT<<"\n"<<"fianl path:\n";
     logpath(path);
+    path.length;
     return path;
 }
 
 void DPGraphPlan::logpath(const PathPointxy &pa){
+
     for(const auto &per_point:pa.pps)
     {
         log<<per_point.x<<"\t"<<per_point.y<<"\t"<<per_point.angle<<"\t"<<per_point.k<<"\n";//这里的k不一定 是对的
     }
+    log<<endl;
 }
+void DPGraphPlan::logFrenetpath(const common::FrenetFramePath &pa){
+
+    for(const auto &per_point:pa)
+    {
+        log<<per_point.s<<"\t"<<per_point.l<<"\t"<<per_point.dl<<"\t"<<per_point.ddl<<"\n";//这里的k不一定 是对的
+    }
+    log<<endl;
+}
+
 
 bool DPGraphPlan::ChooseMinCostPath(std::list<std::list<DPRoadGraphNode>> graph_nodes,std::vector<DPRoadGraphNode> *min_cost_path)
 {

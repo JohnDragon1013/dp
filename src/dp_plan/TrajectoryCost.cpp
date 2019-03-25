@@ -69,10 +69,9 @@ ComparableCost TrajectoryCost::CalculatePathCost(
     }
     path_cost *= config_.path_resolution;//分辨率  步长
 
-    if (curr_level == total_level) {
+    if (curr_level == total_level-1) {//TODO :never step into,find the reason
         const float end_l = curve.Evaluate(0, end_s - start_s);
-        path_cost +=
-                std::sqrt(end_l - init_sl_point_.l / 2.0) * config_.path_end_l_cost;
+        path_cost += end_l*end_l * config_.path_end_l_cost;
     }
     cost.smoothness_cost = path_cost;
     return cost;
@@ -116,7 +115,7 @@ ComparableCost TrajectoryCost::CalculateStaticObstacleCost(
     double lasts=0.0;
     int count=1;
     for (float curr_s = start_s; curr_s <= end_s;
-         curr_s += 20*config_.path_resolution)
+         curr_s += config_.path_resolution)
     {//遍历曲线
         const float curr_l = curve.Evaluate(0, curr_s - start_s);
         const float d_prime = curve.Evaluate(1, curr_s - start_s);
@@ -143,7 +142,7 @@ ComparableCost TrajectoryCost::CalculateStaticObstacleCost(
         double v = 0.0;
         double a = 0.0;
          CartesianFrenetConverter::frenet_to_cartesian(
-                curr_s,referpoint.x,referpoint.y,referpoint.heading,0.0,0.0,
+                curr_s,referpoint.x,referpoint.y,referpoint.heading,referpoint.kappa_,referpoint.dkappa_,
                 s_conditions,d_conditions,&x, &y,
                 &theta, &kappa, &v, &a);
         RoadPoint ptemp(x,y,theta,kappa);
