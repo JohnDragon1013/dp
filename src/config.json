@@ -1,8 +1,8 @@
 {
   "step_length_max" :15.0,
   "step_length_min":8.0,
-  "lateral_sample_offset":4.0,
-  "lateral_sample_offset_step":1.0,
+  "lateral_sample_offset":2.0,
+  "lateral_sample_offset_step":0.5,
   "eval_time_interval":0.1 ,
   "path_resolution" :1.0,
   "obstacle_ignore_distance" :20.0,

@@ -26,7 +26,8 @@ void LocationReceiver::LocationCallback(const iau_ros_msgs::LocationPtr& map_ptr
     currentLocation.y = tempp.y - m_initialPoint.y;
     currentLocation.angle = tempp.angle;
 }
-PathPointxy LocationReceiver::GetLocalPath() {
+PathPointxy LocationReceiver::GetLocalPath(Obstacle &obs) {
+    obs = m_obstacle;
     //updatelocation();
     if(m_wholereferpath.pps.empty())
         return PathPointxy();
@@ -83,7 +84,7 @@ PathPointxy LocationReceiver::GetLocalPath() {
     return tempLane;
 }
 bool LocationReceiver::readPath(){
-    ifstream ifile("/home/z/文档/仿真地图/more-C.txt");
+    ifstream ifile("/home/z/文档/仿真地图/s.txt");
     if(!ifile){
         cout<<"读取文件失败"<<endl;
         return false;
@@ -144,21 +145,6 @@ bool LocationReceiver::updatelocation(double time_lidar,RoadPoint &newLocation) 
     //cout << "定位stamp:"<<map_ptr.header.stamp << endl;
     return true;
 }
-
-bool LocationReceiver::storageLocation(iau_ros_msgs::Location map) {
-//    {
-//        boost::mutex::scoped_lock lock (_mutex_poseVec);
-//        maybelocation.push_back(map);
-//        //cout<<"存储"<<endl;
-//        //int _num_total=maybelocation.size();
-//        while(maybelocation.size() > _num_MaxBuffer && !maybelocation.empty()) {
-//            maybelocation.pop_front();
-//            //cout<<"删除点"<<endl;
-//        }
-//        lock.unlock();
-//    }
-    return true;
-}
 void LocationReceiver::LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
     //cout << "激光stamp:" <<cloud_ptr->header.stamp<< endl;
     {
@@ -176,8 +162,8 @@ void LocationReceiver::LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr){
 }
 bool LocationReceiver::reSolveRosMsg(/*const iau_ros_msgs::GridPtr& rosMsg*/)
 {
-//    m_obstacle.SetVirtualGridObsInfo();
-//    return true;
+    m_obstacle.SetVirtualGridObsInfo();
+    return true;
     if(flag_updateLidar)
     {
         boost::mutex::scoped_lock lock(_mutex_update);

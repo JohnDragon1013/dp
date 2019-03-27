@@ -69,6 +69,7 @@ public:
     PathPointxy Getfinalpath(common::FrenetFramePath &lastFrenetPath);
     //inline std::vector<common::FrenetFramePoint> Getpath(){ return m_fanalFrenetpath;};
     inline vector<PathPointxy> GetAllPath(){return m_AllxyPath;};
+    vector<RoadPoint> GetSampleNode();
 private:
     void UpdateNode(const std::list<DPRoadGraphNode> &prev_nodes,
                     const int level, const int total_level,

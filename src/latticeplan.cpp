@@ -27,6 +27,7 @@ RoadPoint initialPoint;
 RoadPoint lastLocation;
 RoadPoint collisionPoint;
 vector<PathPointxy> path4draw;
+vector<RoadPoint> sampleNode;
 common::FrenetFramePath last_path_;
 void send4Draw();
 void send4follow(bool flag_failed);
@@ -44,9 +45,9 @@ ros::Time _time_register;
 void send4Draw(){
     //发送路径信息
     //路径信息
-    visualization_msgs::Marker line_path, obsCloud, points_refer,lane_path;
+    visualization_msgs::Marker line_path, obsCloud, points_refer,lane_path1,lane_path2;
     visualization_msgs::Marker crashPoint;
-    lane_path.header.frame_id =crashPoint.header.frame_id = points_refer.header.frame_id = obsCloud.header.frame_id = line_path.header.frame_id = "velodyne";
+    lane_path2.header.frame_id=lane_path1.header.frame_id =crashPoint.header.frame_id = points_refer.header.frame_id = obsCloud.header.frame_id = line_path.header.frame_id = "velodyne";
     crashPoint.header.stamp = points_refer.header.stamp = obsCloud.header.stamp = line_path.header.stamp = ros::Time::now();
     crashPoint.ns =points_refer.ns = obsCloud.ns = line_path.ns = "Plan_Data";
     line_path.id = 0;
@@ -87,14 +88,14 @@ void send4Draw(){
     //pcl::PointCloud<pcl::PointXYZRGB> cloud_colli;
     //sensor_msgs::PointCloud2 co_output;
     //车道线
-    lane_path.id=4;
-    lane_path.type = visualization_msgs::Marker::POINTS;
-    lane_path.scale.x = 0.3;
-    lane_path.scale.y = 0.1;
-    lane_path.color.r = 0;
-    lane_path.color.g = 0;
-    lane_path.color.b = 0;
-    lane_path.color.a = 1.0;
+    lane_path1.id=5;lane_path2.id        =4;
+    lane_path1.type   =lane_path2.type     = visualization_msgs::Marker::LINE_STRIP;
+    lane_path1.scale.x=lane_path2.scale.x = 0.1;
+    lane_path1.scale.y=lane_path2.scale.y = 0.1;
+    lane_path1.color.r=lane_path2.color.r = 0;
+    lane_path1.color.g=lane_path2.color.g = 0;
+    lane_path1.color.b=lane_path2.color.b = 0;
+    lane_path1.color.a=lane_path2.color.a = 1.0;
     //其他路径
     pcl::PointCloud<pcl::PointXYZRGB> other_Path;
     sensor_msgs::PointCloud2 otherPath_output;
@@ -102,6 +103,9 @@ void send4Draw(){
     //参考路径
     pcl::PointCloud<pcl::PointXYZRGB> reference_Path;
     sensor_msgs::PointCloud2 reference_output;
+
+    pcl::PointCloud<pcl::PointXYZRGB> pcl_sampleNode;
+    sensor_msgs::PointCloud2 sampleNode_output;
 
     pcl::PointXYZRGB collsionPo;
     geometry_msgs::Point co;
@@ -113,38 +117,48 @@ void send4Draw(){
     //ROS_INFO("begin to send path");
     //将路径坐标转换为局部
     for (size_t i = 0; i < ExcutablePath.pps.size(); ++i) {
-        double xout, yout;
-        RoadPoint org = g_currentLocation;
-        org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
-        BasicStruct::WorldtoMap(org, ExcutablePath.pps[i].x, ExcutablePath.pps[i].y, xout, yout);
+//        double xout, yout;
+//        RoadPoint org = g_currentLocation;
+//        org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
+//        BasicStruct::WorldtoMap(org, ExcutablePath.pps[i].x, ExcutablePath.pps[i].y, xout, yout);
         geometry_msgs::Point p;
-        p.x = yout;
-        p.y = -xout;
+        p.x = ExcutablePath.pps[i].x;//-xout;
+        p.y = ExcutablePath.pps[i].y;//yout;
         p.z = 0;
         line_path.points.push_back(p);
     }
     //将参考路径转换为局部坐标 TODO:添加车道线
     for (size_t i = 0; i < referLane.pps.size(); ++i) {
-        double xout, yout;
-        RoadPoint org = g_currentLocation;
-        org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
-        BasicStruct::WorldtoMap(org, referLane.pps[i].x, referLane.pps[i].y, xout, yout);
+//        double xout, yout;
+//        RoadPoint org = g_currentLocation;
+//        org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
+//        BasicStruct::WorldtoMap(org, referLane.pps[i].x, referLane.pps[i].y, xout, yout);
+//        double newangle = BasicStruct::AngleNormalnize1(org.angle+referLane.pps[i].angle);
         //geometry_msgs::Point temp;
         pcl::PointXYZRGB temp;
-        temp.x = yout;
-        temp.y = -xout;
+        temp.x = referLane.pps[i].x;//-xout;
+        temp.y = referLane.pps[i].y;//yout;
         temp.z = 0;
         temp.b =200.0;
         reference_Path.points.push_back(temp);
         geometry_msgs::Point p;
-        p.x = temp.x + 1.5*cos(referLane.pps[i].angle);
-        p.y = temp.y-1.5*sin(referLane.pps[i].angle);
+        p.x = referLane.pps[i].x + 2*sin(referLane.pps[i].angle);
+        p.y = referLane.pps[i].y-2*cos(referLane.pps[i].angle);
         p.z = temp.z;
-        lane_path.points.push_back(p);
-        //p.y = temp.y+1.5;
-        //lane_path.points.push_back(p);
+        lane_path1.points.push_back(p);
+        p.x = referLane.pps[i].x - 2*sin(referLane.pps[i].angle);
+        p.y = referLane.pps[i].y + 2*cos(referLane.pps[i].angle);
+        lane_path2.points.push_back(p);
     }
-
+    for(const auto&sample:sampleNode){
+        pcl::PointXYZRGB temp;
+        temp.x=sample.x;
+        temp.y=sample.y;
+        temp.b=100;
+        temp.r=10;
+        temp.z=0;
+        pcl_sampleNode.push_back(temp);
+    }
     vector<unsigned char> griddata = obs.GetGridObs();
     if (griddata.size() > 0) {
         //cloud_obs.width = 600;//ExcutablePath.pps.size();
@@ -152,11 +166,11 @@ void send4Draw(){
         //cloud_obs.points.resize(cloud_obs.width * cloud_obs.height);
 
         for (int j = 0; j < 400; ++j) {
-            for (int k = 0; k < 150; ++k) {
+            for (int k = 0; k < 400; ++k) {
                 geometry_msgs::Point temp;
-                if (griddata[j * 150 + k] >= 1) {
-                    temp.x = j * GRID_WIDTH - 40;//平移100米
-                    temp.y = -(k * GRID_WIDTH - 15);//平移60米
+                if (griddata[j * 400 + k] >= 1) {
+                    temp.x =(k * GRID_WIDTH - 40);//平移60米
+                    temp.y = j * GRID_WIDTH - 40;//平移100米
                     temp.z = 0;
                     obsCloud.points.push_back(temp);
 
@@ -172,13 +186,13 @@ void send4Draw(){
         //if(l==0||l==8)
         {
             for (int m = 0; m < path4draw[l].pps.size(); ++m) {
-                double xout, yout;
-                RoadPoint org = g_currentLocation;
-                org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
-                BasicStruct::WorldtoMap(org, path4draw[l].pps[m].x, path4draw[l].pps[m].y, xout, yout);
+//                double xout, yout;
+//                RoadPoint org = g_currentLocation;
+//                org.angle = BasicStruct::AngleNormalnize1(PI / 2.0 - g_currentLocation.angle);
+//                BasicStruct::WorldtoMap(org, path4draw[l].pps[m].x, path4draw[l].pps[m].y, xout, yout);
                 pcl::PointXYZRGB p;
-                p.x = yout;
-                p.y = -xout;
+                p.x = path4draw[l].pps[m].x;//-xout;
+                p.y = path4draw[l].pps[m].y;//yout;
                 p.z = 0;
                 p.a=1.0;
                 p.r = 1;
@@ -191,14 +205,19 @@ void send4Draw(){
     otherPath_output.header.frame_id = "velodyne";
     pcl::toROSMsg(reference_Path, reference_output);
     reference_output.header.frame_id = "velodyne";
-    pcl_pubPath.publish(obsCloud);
+
+    pcl::toROSMsg(pcl_sampleNode,sampleNode_output);
+    sampleNode_output.header.frame_id = "velodyne";
+    //pcl_pubPath.publish(obsCloud);
 
     pcl_pubPath.publish(crashPoint);
 //    pcl_pubReferPath.publish(points_refer);
     pcl_pubPath.publish(line_path);
-    //pcl_pubPath.publish(lane_path);
+    pcl_pubPath.publish(lane_path1);
+    pcl_pubPath.publish(lane_path2);
 
     pcl_pubOtherPath.publish(otherPath_output);
+    //pcl_pubOtherPath.publish(sampleNode_output);
     pcl_pubReferPath.publish(reference_output);
     //cout << "发送完成。。。" << endl;
 
@@ -227,7 +246,7 @@ bool beginPlan(){
         //cout << "start Plan" << endl;
         PathPointxy ep = dpp.Getfinalpath(last_path_);
         path4draw = dpp.GetAllPath();
-        //bool flag_plan = ;
+        sampleNode = dpp.GetSampleNode();
         if(ep.pps.empty()) {
             ROS_WARN("PLAN failed");
         }
@@ -283,7 +302,7 @@ void Process(){
         if(!Location_receiver.reSolveRosMsg())
         {
         }
-        referLane = Location_receiver.GetLocalPath();
+        referLane = Location_receiver.GetLocalPath(obs);
         //add the replan function
         if(Replan())
         {

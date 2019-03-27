@@ -330,10 +330,14 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
         AllpathFrenetPoint.push_back(temp_);
     }
     vector<PathPointxy> apxy;
+
     for (auto perFrenetpath:AllpathFrenetPoint) {
+        bool outLane = false;
         PathPointxy temp_;
         outrange =false;
         for (auto frenetp:perFrenetpath) {
+//            if(abs(frenetp.l)>=2)
+//                outLane = true;
             int mayindex=0;
             for(auto referSLPoint:reference_line_.reference_points_)
             {
@@ -369,8 +373,10 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
             RoadPoint ptemp(x, y, theta, kappa);
             temp_.pps.push_back(ptemp);
         }
-        apxy.push_back(temp_);
-        logpath(temp_);
+        if(!outLane) {
+            apxy.push_back(temp_);
+            logpath(temp_);
+        }
     }
     m_AllxyPath = apxy;
     //cout<<"最后提取的路径数量："<<m_AllxyPath.size()<<endl;
@@ -386,6 +392,48 @@ PathPointxy DPGraphPlan::Getfinalpath(common::FrenetFramePath &lastFrenetPath) {
     logpath(path);
     path.length;
     return path;
+}
+vector<RoadPoint> DPGraphPlan::GetSampleNode() {
+    vector<RoadPoint> allnode;
+    for(const auto &level:m_AllSamplePoints)
+    {
+        for(const auto &frenetp:level) {
+            int mayindex = 0;
+            for (auto referSLPoint:reference_line_.reference_points_) {
+                if (referSLPoint.s > frenetp.s) {
+                    break;
+                }
+                mayindex++;
+
+            }
+            if (mayindex >= reference_line_.reference_points_.size() - 1) {
+                mayindex = reference_line_.reference_points_.size() - 1;
+                //outrange = true;
+                //cout<<"|||||||||||||||||||||"<<endl;
+                break;
+            }
+            //找到最近的参考点
+            auto referpoint = reference_line_.reference_points_[mayindex];// referXYPath.pps[mayindex];
+            //获得s l转换为笛卡尔
+//速度和加速度随便输的
+            std::array<double, 3> s_conditions = {frenetp.s, 5, 0.5};
+            std::array<double, 3> d_conditions = {frenetp.l, 0, 0};
+            double x = 0.0;
+            double y = 0.0;
+            double theta = 0.0;
+            double kappa = 0.0;
+            double v = 0.0;
+            double a = 0.0;
+            CartesianFrenetConverter::frenet_to_cartesian(
+                    frenetp.s, referpoint.x, referpoint.y, referpoint.heading, referpoint.kappa_, referpoint.dkappa_,
+                    s_conditions, d_conditions, &x, &y,
+                    &theta, &kappa, &v, &a);
+            RoadPoint ptemp(x, y, theta, kappa);
+            allnode.push_back(ptemp);
+        }
+    }
+
+    return allnode;
 }
 
 void DPGraphPlan::logpath(const PathPointxy &pa){
@@ -405,69 +453,4 @@ void DPGraphPlan::logFrenetpath(const common::FrenetFramePath &pa){
     log<<endl;
 }
 
-
-bool DPGraphPlan::ChooseMinCostPath(std::list<std::list<DPRoadGraphNode>> graph_nodes,std::vector<DPRoadGraphNode> *min_cost_path)
-{
-    // graph_nodes.back()（即最后一条航点链表）就是我们所需的最小代价航点链表
-    // find best path
-    std:: vector< vector<DPRoadGraphNode> > apn;
-    vector<double > dis2lastpath;
-    int in = g_LastPath.pps.size()-1;
-    double sum_cost=0.0;
-    if(in>0)
-    {
-        for(const auto &cur_dp_node : graph_nodes.back())
-        {
-            const auto *fatherNode =&cur_dp_node;
-            double sum_dis = 0.0;
-            vector<DPRoadGraphNode> tempnode;
-            while(fatherNode->min_cost_prev_node)
-            {
-                sum_dis += fatherNode->sl_point.l -g_LastPath.pps[in].x;//横向距离
-                fatherNode =fatherNode->min_cost_prev_node;
-                tempnode.push_back(*fatherNode);
-                in--;
-                if(in<0)
-                    break;
-            }
-            tempnode.push_back(*fatherNode);
-            std::reverse(tempnode.begin(),tempnode.end());
-            apn.push_back(tempnode);
-            dis2lastpath.push_back(sum_dis);
-            sum_cost += cur_dp_node.min_cost.safety_cost;
-        }
-    }
-    m_AllpathNode = apn;
-
-    DPRoadGraphNode fake_head;int ii=0;
-    //遍历最后一个level 找出cost最小的那个，等于fake_head的前一个节点
-    for (const auto &cur_dp_node : graph_nodes.back()) {
-        //这里可能需要手写
-        //cur_dp_node.min_cost.historical_cost = dis2lastpath[ii];
-        fake_head.UpdateCost(&cur_dp_node, cur_dp_node.min_cost_curve,
-                             cur_dp_node.min_cost);
-
-        if(1)
-        {
-
-        }
-        ii++;
-    }
-
-    const auto *fatherNode =&fake_head;
-    while(fatherNode->min_cost_prev_node)
-    {
-        fatherNode =fatherNode->min_cost_prev_node;
-        min_cost_path->push_back(*fatherNode);
-    }
-    //找到起点
-
-    if (fatherNode != &graph_nodes.front().front()) {
-        return false;
-    }
-    std::reverse(min_cost_path->begin(),min_cost_path->end());
-    //这里就找完终点了 需要加入上一次的路径，进行对比。
-
-    return true;
-}
 

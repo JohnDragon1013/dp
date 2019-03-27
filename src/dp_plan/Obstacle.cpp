@@ -28,7 +28,7 @@
 //    m_GridObs = griddata;
 //}
 void Obstacle::SetVirtualGridObsInfo() {
-    GRID_Num = 60000;//cloud_ptr->height*cloud_ptr->width;
+    GRID_Num = 160000;//cloud_ptr->height*cloud_ptr->width;
     if(GRID_Num<=0) {
         cout << "cloud_ptr is null " << endl;
         return ;
@@ -36,7 +36,7 @@ void Obstacle::SetVirtualGridObsInfo() {
     grid_widthX = 0.2;
     grid_widthY = 0.2;
     grid_xl = 0;//cloud_ptr->width;//g_planinput.xl;
-    grid_xr = 150;//g_planinput.xr;
+    grid_xr = 400;//g_planinput.xr;
     grid_yu = 400;//cloud_ptr->height;//g_planinput.yu;
     grid_yd = 0;//g_planinput.yd;
     GRID_WidthNum = grid_xr-grid_xl  ;
@@ -45,13 +45,17 @@ void Obstacle::SetVirtualGridObsInfo() {
     int num=200;
     for (int i=0;i<GRID_Num;i++)
     {
-        //if(i>41320&&i<41330)//15m
-        if((i>37550&&i<37580)||(i>52590&&i<52603))//|| ((i=num*150+85)&&num<400) )
-            griddata[i]=1;
+//(i>37550&&i<37584)||(i>52590&&i<52603)/*直线*/
+//C shape
+//        if((i>41353&&i<41363)||(i>47698&&i<47700))//|| ((i=num*150+85)&&num<400) )
+//            griddata[i]=1;
 //        else if((i=num*150+85)&&num<400)
 //        {
 //            griddata[i]=1;
 //        }
+        //s型形状约束 前方25米，偏左80000+125*400+200=130200  前方10米 80000+50×400+200
+        if((i>130150&&i<130210)||(i>100191&&i<100300))
+            griddata[i]=1;
         else
             griddata[i]=0;
         num++;

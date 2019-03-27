@@ -29,7 +29,7 @@ public:
     void LidarCallback(const iau_ros_msgs::GridPtr& cloud_ptr);
     void VelocityCallback(const iau_ros_msgs::VelocityPtr velocity_ptr);
     void VehicleStatusCallback(const iau_ros_msgs::VehicleStatusPtr vehicleStatus_Ptr);
-    PathPointxy GetLocalPath();
+    PathPointxy GetLocalPath(Obstacle &obss);
     bool readPath();
     bool updatelocation(double time_lidar,RoadPoint &newLocation);
     //void setLidarTime(double x){lidar_time =x;};
