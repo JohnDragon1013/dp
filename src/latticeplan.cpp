@@ -208,7 +208,7 @@ void send4Draw(){
 
     pcl::toROSMsg(pcl_sampleNode,sampleNode_output);
     sampleNode_output.header.frame_id = "velodyne";
-    //pcl_pubPath.publish(obsCloud);
+//    pcl_pubPath.publish(obsCloud);
 
     pcl_pubPath.publish(crashPoint);
 //    pcl_pubReferPath.publish(points_refer);
@@ -216,8 +216,8 @@ void send4Draw(){
     pcl_pubPath.publish(lane_path1);
     pcl_pubPath.publish(lane_path2);
 
-    pcl_pubOtherPath.publish(otherPath_output);
-    //pcl_pubOtherPath.publish(sampleNode_output);
+//    pcl_pubOtherPath.publish(otherPath_output);
+    pcl_pubOtherPath.publish(sampleNode_output);
     pcl_pubReferPath.publish(reference_output);
     //cout << "发送完成。。。" << endl;
 
@@ -276,7 +276,7 @@ bool Replan(){
     // 有障碍情况下，是否需要重规划的策略判断
     int m_Threholdtraveldis = ExcutablePath.length * 0.25;
     flag_traveldis = (TravelingDis > m_Threholdtraveldis);
-    flag_cartopath = Location_receiver.DisCurrentToPath(ExcutablePath) > 2.0;
+    flag_cartopath = Location_receiver.DisCurrentToPath(ExcutablePath) > 2.5;
     if (!flag_PlanSucceed || flag_pathempty || flag_pathcollision || flag_traveldis ||
         flag_cartopath )//|| flag_changeLane )
     {

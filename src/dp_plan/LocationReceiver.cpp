@@ -84,7 +84,7 @@ PathPointxy LocationReceiver::GetLocalPath(Obstacle &obs) {
     return tempLane;
 }
 bool LocationReceiver::readPath(){
-    ifstream ifile("/home/z/文档/仿真地图/s.txt");
+    ifstream ifile("/home/z/文档/仿真地图/直线.txt");
     if(!ifile){
         cout<<"读取文件失败"<<endl;
         return false;
